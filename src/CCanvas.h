@@ -14,6 +14,7 @@
 
 #include "ObjModel.h"
 #include "PlyModel.h"
+#include "Model.h"
 
 using namespace std;
 
@@ -27,8 +28,9 @@ class CCanvas : public QGLWidget
 public:
     explicit CCanvas(QWidget *parent = 0) : QGLWidget(parent),
         textureTrain("./media/models/train.jpg"),
-        modelTrain("./media/models/train.obj"),
-        modelTrain2("./media/models/train.ply")
+//        _x_wing("./media/models/train.obj")
+//        _x_wing("./media/models/vader-tie/vader-tie.obj")
+        _x_wing("./media/models/x-wing/x-wing.obj")
     {
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -66,10 +68,8 @@ private:
 
     // Models and textures
     Texture textureTrain;
-    // Model loaded from .obj format
-    ObjModel modelTrain;
-    // Model loaded from .ply format
-    PlyModel modelTrain2;
+    // X-wing
+    Model _x_wing;
 };
 
 #endif 

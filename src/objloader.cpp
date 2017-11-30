@@ -1,7 +1,9 @@
+#include <fstream>
 #include <vector>
 #include <stdio.h>
 #include <string>
 #include <cstring>
+#include <sstream>
 #include <cmath>
 
 #include "objloader.hpp"
@@ -16,115 +18,143 @@
 // - More secure. Change another line and you can inject code.
 // - Loading from memory, stream, etc
 
-bool loadOBJ(
-	const char * path, 
-        std::vector<Point3d> & out_vertices,
-        std::vector<Point2d> & out_uvs,
-        std::vector<Point3d> & out_normals
-){
-	printf("Loading OBJ file %s...\n", path);
+bool loadOBJ(const char * path,
+              std::vector<Point3d> & out_vertices,
+              std::vector<Point2d> & out_uvs,
+              std::vector<Point3d> & out_normals)
+{
+  std::vector<int> vertexIndices, uvIndices, normalIndices;
+  std::vector<Point3d> temp_vertices;
+  std::vector<Point2d> temp_uvs;
+  std::vector<Point3d> temp_normals;
 
-	std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-        std::vector<Point3d> temp_vertices;
-        std::vector<Point2d> temp_uvs;
-        std::vector<Point3d> temp_normals;
+  std::ifstream file(path);
+  if (!file.is_open()) {
+    std::cout << "Failed to open file " << path << std::endl;
+  }
 
+  std::string line;
+  int g = -1;
+  int g_start = 1, g_iter = 1;
+  while (std::getline(file, line)) {
+    std::stringstream stream(line);
+    std::string field;
+    stream >> field;
 
-	FILE * file = fopen(path, "r");
-	if( file == NULL ){
-		printf("Impossible to open the file ! Are you in the right path ? See Tutorial 1 for details\n");
-		getchar();
-		return false;
-	}
+    // Component
+    if (field == "g") {
+      ++g;
+      if (g < g_start) continue;
+      if (g == g_start + g_iter) break;
+      int tvs = int(temp_vertices.size());
+      int uvs = int(temp_uvs.size());
+      int nvs = int(temp_normals.size());
+      // For each vertex of each triangle
+      for (unsigned int i = 0; i < vertexIndices.size(); i++) {
+        // Get the indices of its attributes
+        int vertexIndex = vertexIndices[i];
+        int uvIndex     = uvIndices[i];
+        int normalIndex = normalIndices[i];
+        // Negative indexes
+        if (vertexIndex < 0) vertexIndex = tvs + vertexIndex + 1;
+        if (uvIndex     < 0) uvIndex     = uvs + uvIndex     + 1;
+        if (normalIndex < 0) normalIndex = nvs + normalIndex + 1;
+        // Put the attributes in buffers
+        out_vertices.push_back(temp_vertices[vertexIndex - 1]);
+        out_uvs     .push_back(temp_uvs[uvIndex - 1]);
+        out_normals .push_back(temp_normals[normalIndex - 1]);
+      }
+      
+      temp_vertices.clear();
+      temp_uvs.clear();
+      temp_normals.clear();
+      vertexIndices.clear();
+      uvIndices.clear();
+      normalIndices.clear();
+      continue;
+    }
 
-	while( 1 ){
+    if (g < g_start) continue;
+    
+    // Vertex
+    if (field == "v") {
+      double x, y, z;
+      stream >> x >> y >> z;
+      temp_vertices.push_back(Point3d(x, y, z));
+      continue;
+    }
 
-		char lineHeader[128];
-		// read the first word of the line
-		int res = fscanf(file, "%s", lineHeader);
-		if (res == EOF)
-			break; // EOF = End Of File. Quit the loop.
+    // Vertex texture
+    if (field == "vt") {
+      double x, y;
+      stream >> x >> y;
+      temp_uvs.push_back(Point2d(x, -y));
+      continue;
+    }
+    
+    // Vertex normal
+    if (field == "vn") {
+      double x, y, z;
+      temp_normals.push_back(Point3d(x, y, z));
+      continue;
+    }
+    
+    // Faces
+    if (field == "f") {
+      // The stream now contains something like "1/2/3 4/5/6 -1/-2/-3"
+      // The while goes over each "x/y/z" block
+      while (stream >> field) {
+        std::stringstream indexes(field);
+        std::string index;
+        // Vector index
+        std::getline(indexes, index, '/');
+        vertexIndices.push_back(stoi(index));
+        // Screen index
+        std::getline(indexes, index, '/');
+        uvIndices.push_back(stoi(index));
+        // Normal index
+        std::getline(indexes, index, '/');
+        normalIndices.push_back(stoi(index));
+      }
+    }
+  }
 
-		// else : parse lineHeader
-		
-		if ( strcmp( lineHeader, "v" ) == 0 ){
-                        float vx, vy, vz;
-                        fscanf(file, "%f %f %f\n", &vx, &vy, &vz );
-                        Point3d vertex(vx, vy, vz);
-            temp_vertices.push_back(vertex);
-                }else if ( strcmp( lineHeader, "vt" ) == 0 ){
-                        float uvx, uvy;
-                        fscanf(file, "%f %f\n", &uvx, &uvy );
-                        uvy = -uvy; // Invert V coordinate since we will only use DDS texture, which are inverted. Remove if you want to use TGA or BMP loaders.
-                        Point2d uv(uvx, uvy);
-			temp_uvs.push_back(uv);
-		}else if ( strcmp( lineHeader, "vn" ) == 0 ){
-                        float nx, ny, nz;
-                        fscanf(file, "%f %f %f\n", &nx, &ny, &nz);
-                        Point3d normal(nx, ny, nz);
-			temp_normals.push_back(normal);
-		}else if ( strcmp( lineHeader, "f" ) == 0 ){
-			std::string vertex1, vertex2, vertex3;
-			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-                        int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2] );
-			if (matches != 9){
-				printf("File can't be read by our simple parser :-( Try exporting with other options\n");
-                                fclose(file);
-				return false;
-			}
-			vertexIndices.push_back(vertexIndex[0]);
-			vertexIndices.push_back(vertexIndex[1]);
-			vertexIndices.push_back(vertexIndex[2]);
-			uvIndices    .push_back(uvIndex[0]);
-			uvIndices    .push_back(uvIndex[1]);
-			uvIndices    .push_back(uvIndex[2]);
-			normalIndices.push_back(normalIndex[0]);
-			normalIndices.push_back(normalIndex[1]);
-			normalIndices.push_back(normalIndex[2]);
-		}else{
-			// Probably a comment, eat up the rest of the line
-			char stupidBuffer[1000];
-                        fgets(stupidBuffer, 1000, file);
-		}
-
-	}
-
-	// For each vertex of each triangle
-	for( unsigned int i=0; i<vertexIndices.size(); i++ ){
-
-		// Get the indices of its attributes
-		unsigned int vertexIndex = vertexIndices[i];
-		unsigned int uvIndex = uvIndices[i];
-		unsigned int normalIndex = normalIndices[i];
-		
-		// Get the attributes thanks to the index
-                Point3d vertex = temp_vertices[ vertexIndex-1 ];
-                Point2d uv = temp_uvs[ uvIndex-1 ];
-                Point3d normal = temp_normals[ normalIndex-1 ];
-		
-		// Put the attributes in buffers
-		out_vertices.push_back(vertex);
-		out_uvs     .push_back(uv);
-		out_normals .push_back(normal);
-	
-	}
-	fclose(file);
-	return true;
+  int tvs = temp_vertices.size();
+  int uvs = temp_uvs.size();
+  int nvs = temp_normals.size();
+  // For each vertex of each triangle
+  for (unsigned int i = 0; i < vertexIndices.size(); i++) {
+    // Get the indices of its attributes
+    int vertexIndex = vertexIndices[i];
+    int uvIndex     = uvIndices[i];
+    int normalIndex = normalIndices[i];
+    // Negative indexes
+    if (vertexIndex < 0) vertexIndex = tvs + vertexIndex + 1;
+    if (uvIndex     < 0) uvIndex     = uvs + uvIndex     + 1;
+    if (normalIndex < 0) normalIndex = nvs + normalIndex + 1;
+    // Put the attributes in buffers
+    out_vertices.push_back(temp_vertices[vertexIndex - 1]);
+    out_uvs     .push_back(temp_uvs[uvIndex - 1]);
+    out_normals .push_back(temp_normals[normalIndex - 1]);
+  }
+  
+  file.close();
+  return true;
 }
 
 void vecPoint2dToFloat(std::vector<Point2d> &_vec, std::vector<GLfloat> &_out) {
-    _out.clear();
-    for(auto i = _vec.begin(); i != _vec.end(); ++i) {
-        _out.push_back(i->x());
-        _out.push_back(i->y());
-    }
+  _out.clear();
+  for(auto i = _vec.begin(); i != _vec.end(); ++i) {
+    _out.push_back(i->x());
+    _out.push_back(i->y());
+  }
 }
 
 void vecPoint3dToFloat(std::vector<Point3d> &_vec, std::vector<GLfloat> &_out) {
-    _out.clear();
-    for(auto i = _vec.begin(); i != _vec.end(); ++i) {
-        _out.push_back(i->x());
-        _out.push_back(i->y());
-        _out.push_back(i->z());
-    }
+  _out.clear();
+  for(auto i = _vec.begin(); i != _vec.end(); ++i) {
+    _out.push_back(i->x());
+    _out.push_back(i->y());
+    _out.push_back(i->z());
+  }
 }

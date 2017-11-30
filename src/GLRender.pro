@@ -22,7 +22,10 @@ HEADERS += ./Base.h \
            ./ObjModel.h \
            ./PlyModel.h \
            ./objloader.hpp \
-           ./tinyply.h
+           ./tinyply.h \
+    XWing.h \
+    Model.h \
+    Component.h
 
 # Source files
 SOURCES += ./CCanvas.cpp \
@@ -32,7 +35,10 @@ SOURCES += ./CCanvas.cpp \
            ./ObjModel.cpp \
            ./PlyModel.cpp \
            ./objloader.cpp \
-           ./tinyply.cpp
+           ./tinyply.cpp \
+    XWing.cpp \
+    Model.cpp \
+    Component.cpp
 
 # Forms
 FORMS += ./GLRender.ui
