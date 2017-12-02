@@ -15,6 +15,8 @@
 #include "ObjModel.h"
 #include "PlyModel.h"
 #include "Model.h"
+#include "perlinnoise.hpp"
+#include "terrain.hpp"
 
 using namespace std;
 
@@ -43,6 +45,7 @@ protected:
     void paintGL();
 
 private:
+
     void lookAt(const GLdouble eyex,
                 const GLdouble eyey,
                 const GLdouble eyez,
@@ -64,12 +67,20 @@ private:
         Cockpit             // View the scene from the train cockpit (if you want, or whatever other view)
     };
 
+    float generateHeight(float x, float y, const siv::PerlinNoise& perlin);
+    void drawTerrain();
+    Point3d computeNormal(float x, float y, const siv::PerlinNoise& perlin);
+
+
     void setView(View _view);
 
     // Models and textures
     Texture textureTrain;
+    Terrain _terrain;
+
     // X-wing
     Model _x_wing;
+    GLfloat tau;
 };
 
 #endif 

@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <cmath>
 
 /***************************************************************************
 Point.h
@@ -251,7 +252,7 @@ public:
   * @return the \b norm
   */
   double norm() const {
-    return sqrt( _x * _x + _y * _y + _z * _z );
+    return std::sqrt( _x * _x + _y * _y + _z * _z );
   }
 
   /**

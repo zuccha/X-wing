@@ -43,8 +43,10 @@ void CCanvas::initializeGL()
      * Before you can use the texture you need to initialize it by calling the setTexture() method.
      * Before you can use OBJ/PLY model, you need to initialize it by calling init() method.
      */
+    tau = 1;
     textureTrain.setTexture();
     _x_wing.init();
+    _terrain.generate(100);
 }
 
 //-----------------------------------------------------------------------------
@@ -199,7 +201,7 @@ void CCanvas::paintGL()
     setView(View::Perspective);
 
     // You can always change the light position here if you want
-    GLfloat lightpos[] = {0.0f, 0.0f, 10.0f, 0.0f};
+    GLfloat lightpos[] = {10.0f, 10.0f, 10.0f, 1.0f};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     /**** Axes in the global coordinate system ****/
@@ -250,8 +252,9 @@ void CCanvas::paintGL()
      *  GLfloat matrix[16];
      *  glGetFloatv (GL_MODELVIEW_MATRIX, matrix);
     */
-
-    _x_wing.draw();
+//    drawTerrain();
+    _terrain.draw();
+//    _x_wing.draw();
     // Look at the PlyModel class to see how the drawing is done
     /*
      * The models you load can have different scales. If you are drawing a proper model but nothing
@@ -262,5 +265,6 @@ void CCanvas::paintGL()
     // Remove the last transformation matrix from the stack - you have drawn your last
     // object with a new transformation and now you go back to the previous one
     glPopMatrix();
+    tau++;
 //    textureTrain.unbind();
 }
