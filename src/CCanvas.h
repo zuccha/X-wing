@@ -15,6 +15,8 @@
 #include "ObjModel.h"
 #include "PlyModel.h"
 #include "Model.h"
+#include "perlinnoise.hpp"
+#include "terrain.hpp"
 
 using namespace std;
 
@@ -27,10 +29,9 @@ class CCanvas : public QGLWidget
 
 public:
     explicit CCanvas(QWidget *parent = 0) : QGLWidget(parent),
-        textureTrain("./media/models/train.jpg"),
-//        _x_wing("./media/models/", "train.obj")
-//        _x_wing("./media/models/vader-tie/", "vader-tie.obj.out")
-        _x_wing("./media/models/x-wing/", "x-wing.obj")
+//        _x_wing   ("./media/models/", "train.obj")
+        _x_wing   ("./media/models/x-wing/", "x-wing.obj"),
+        _vader_tie("./media/models/vader-tie/", "vader-tie.obj")
     {
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -43,6 +44,7 @@ protected:
     void paintGL();
 
 private:
+
     void lookAt(const GLdouble eyex,
                 const GLdouble eyey,
                 const GLdouble eyez,
@@ -64,12 +66,17 @@ private:
         Cockpit             // View the scene from the train cockpit (if you want, or whatever other view)
     };
 
+    float generateHeight(float x, float y, const siv::PerlinNoise& perlin);
+    void drawTerrain();
+    Point3d computeNormal(float x, float y, const siv::PerlinNoise& perlin);
+
+
     void setView(View _view);
 
     // Models and textures
-    Texture textureTrain;
-    // X-wing
+    Terrain _terrain;
     Model _x_wing;
+    Model _vader_tie;
 
     GLfloat tau;
 };

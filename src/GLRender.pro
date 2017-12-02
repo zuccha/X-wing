@@ -25,7 +25,9 @@ HEADERS += ./Base.h \
            ./tinyply.h \
     XWing.h \
     Model.h \
-    Component.h
+    Component.h \
+    perlinnoise.hpp \
+    terrain.hpp
 
 # Source files
 SOURCES += ./CCanvas.cpp \
@@ -38,7 +40,8 @@ SOURCES += ./CCanvas.cpp \
            ./tinyply.cpp \
     XWing.cpp \
     Model.cpp \
-    Component.cpp
+    Component.cpp \
+    terrain.cpp
 
 # Forms
 FORMS += ./GLRender.ui

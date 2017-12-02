@@ -43,10 +43,10 @@ void CCanvas::initializeGL()
      * Before you can use the texture you need to initialize it by calling the setTexture() method.
      * Before you can use OBJ/PLY model, you need to initialize it by calling init() method.
      */
-    textureTrain.setTexture();
+    tau = 1;
     _x_wing.init();
-
-    tau = 1.0;
+    _vader_tie.init();
+    _terrain.generate(100);
 }
 
 //-----------------------------------------------------------------------------
@@ -201,71 +201,24 @@ void CCanvas::paintGL()
     setView(View::Perspective);
 
     // You can always change the light position here if you want
-    GLfloat lightpos[] = {0.0f, 0.0f, 10.0f, 0.0f};
+    GLfloat lightpos[] = {10.0f, 10.0f, 10.0f, 1.0f};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
-    /**** Axes in the global coordinate system ****/
-    /*
-    glDisable(GL_LIGHTING);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    glBegin(GL_LINES);
-        glVertex3f(-6.0f, 0.0f, 0.0f);
-        glVertex3f(6.0f, 0.0f, 0.0f);
-    glEnd();
-    glColor3f(0.0f, 1.0f, 0.0f);
-    glBegin(GL_LINES);
-        glVertex3f(0.0f, -6.0f, 0.0f);
-        glVertex3f(0.0f, 6.0f, 0.0f);
-    glEnd();
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glBegin(GL_LINES);
-        glVertex3f(0.0f, 0.0f, -6.0f);
-        glVertex3f(0.0f, 0.0f, 6.0f);
-    glEnd();
-    glEnable(GL_LIGHTING);
-    */
-    /**** Setup and draw your objects ****/
-
-    // You can freely enable/disable some of the lights in the scene as you wish
-    //glEnable(GL_LIGHT0);
-    //glDisable(GL_LIGHT1);
-    // Before drawing an object, you can set its material properties
-    /*
-    glColor3f(0.5f, 0.5f, 0.5f);
-    GLfloat amb[]  = {0.1f, 0.1f, 0.1f};
-    GLfloat diff[] = {0.7f, 0.7f, 0.7f};
-    GLfloat spec[] = {0.1f, 0.1f, 0.1f};
-    GLfloat shin = 0.0001;
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, amb);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diff);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, spec);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, &shin);
-    */
-
-    // Drawing the object with texture
-//    textureTrain.bind();
-    _x_wing.bind_texture();
-    // You can stack new transformation matrix if you don't want
-    // the previous transformations to apply on this object
+    // Terrain
     glPushMatrix();
-    /*
-     * Obtaining the values of the current modelview matrix
-     *  GLfloat matrix[16];
-     *  glGetFloatv (GL_MODELVIEW_MATRIX, matrix);
-    */
-    tau += 1.0;
-//    glRotatef(tau, 0, 1, 0);
-    _x_wing.draw();
-    // Look at the PlyModel class to see how the drawing is done
-    /*
-     * The models you load can have different scales. If you are drawing a proper model but nothing
-     * is shown, check the scale of the model, your camera could be for example inside of it.
-     */
-    //glScalef(0.02f, 0.02f, 0.02f);
-
-    // Remove the last transformation matrix from the stack - you have drawn your last
-    // object with a new transformation and now you go back to the previous one
+    _terrain.draw();
     glPopMatrix();
-//    textureTrain.unbind();
-    _x_wing.unbind_texture();
+
+    // X-wing
+    glPushMatrix();
+    _x_wing.draw();
+    glPopMatrix();
+
+    // Vader tie fighter
+    glPushMatrix();
+    glTranslatef(0, 5, -10);
+    _vader_tie.draw();
+    glPopMatrix();
+
+    tau++;
 }

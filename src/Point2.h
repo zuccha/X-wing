@@ -2,6 +2,7 @@
 #define Point2d_H
 
 #include <cassert>
+#include <cmath>
 
 /***************************************************************************
 Point2d.h
@@ -227,7 +228,7 @@ public:
   * @return the \b norm
   */
   double norm() const {
-    return sqrt( _x * _x + _y * _y );
+    return std::sqrt( _x * _x + _y * _y );
   }
 
   /**

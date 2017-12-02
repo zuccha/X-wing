@@ -23,10 +23,10 @@ public:
 
   void set_texture(const std::string & path);
 
-  void bind_texture();
-  void unbind_texture();
-
 private:
+  void _bind_texture();
+  void _unbind_texture();
+
   std::vector<GLfloat> _vertices;
   std::vector<GLfloat> _uvs;
   std::vector<GLfloat> _normals;

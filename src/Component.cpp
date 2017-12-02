@@ -51,7 +51,8 @@ void Component::init()
 
 void Component::draw()
 {
-  unbind_texture();
+  _bind_texture();
+
   glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
   glVertexPointer(
       3,                  // size
@@ -74,17 +75,18 @@ void Component::draw()
   
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-  unbind_texture();
+
+  _unbind_texture();
 }
 
-void Component::bind_texture()
+void Component::_bind_texture()
 {
     if (_texture) {
         _texture->bind();
     }
 }
 
-void Component::unbind_texture()
+void Component::_unbind_texture()
 {
     if (_texture) {
         _texture->unbind();

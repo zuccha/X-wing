@@ -65,6 +65,8 @@ public:
         loaded = true;
     }
 
+    const std::string & get_path() { return path; }
+
 private:
     // Global variables.
     bool loaded;

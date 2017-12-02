@@ -87,7 +87,7 @@ void Model::_load(const std::string & path, const std::string & name)
     if (field == "vt") {
       double x, y;
       stream >> x >> y;
-      uvs.push_back(Point2d(x, -y));
+      uvs.push_back(Point2d(x, y));
       continue;
     }
     
@@ -144,20 +144,4 @@ void Model::draw()
   for (Component & components : _components) {
     components.draw();
   }
-}
-
-void Model::bind_texture()
-{
-    for (Component & component : _components) {
-        component.bind_texture();
-    }
-    //_components[4].bind_texture();
-}
-
-void Model::unbind_texture()
-{
-    for (Component & component : _components) {
-        component.unbind_texture();
-    }
-    //_components[4].unbind_texture();
 }

@@ -13,9 +13,6 @@ public:
   void init();
   void draw();
 
-  void bind_texture();
-  void unbind_texture();
-
 private:
   void _load(const std::string & path, const std::string & name);
   Component _makeComponent(const std::vector<int>     & vertexIds,
