@@ -8,19 +8,23 @@
 class Model
 {
 public:
-  Model(const std::string & path);
+  Model(const std::string & path, const std::string & name);
 
   void init();
   void draw();
 
+  void bind_texture();
+  void unbind_texture();
+
 private:
-  void _load(const std::string & path);
+  void _load(const std::string & path, const std::string & name);
   Component _makeComponent(const std::vector<int>     & vertexIds,
                            const std::vector<int>     & uvIds,
                            const std::vector<int>     & normalIds,
                            const std::vector<Point3d> & vertices,
                            const std::vector<Point2d> & uvs,
-                           const std::vector<Point3d> & normals);
+                           const std::vector<Point3d> & normals,
+                           const std::string          & texture_path);
   
   std::vector<Component> _components;
 };

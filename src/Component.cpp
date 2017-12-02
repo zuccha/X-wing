@@ -2,14 +2,15 @@
 
 Component::Component()
 {
-
 }
 
 void Component::add_vertex(const Point3d & vertex)
 {
-  _vertices.push_back(vertex.x());
-  _vertices.push_back(vertex.y());
-  _vertices.push_back(vertex.z());
+  double r = 1.0;
+  double n = 0.0;
+  _vertices.push_back(vertex.x() * r + n);
+  _vertices.push_back(vertex.y() * r + n);
+  _vertices.push_back(vertex.z() * r + n);
 }
 
 void Component::add_uv(const Point2d & uv)
@@ -25,8 +26,14 @@ void Component::add_normal(const Point3d & normal)
   _normals.push_back(normal.z());
 }
 
+void Component::set_texture(const std::string & path)
+{
+    _texture = std::make_shared<Texture>(path + ".jpg");
+}
+
 void Component::init()
 {
+  _texture->setTexture();
   glGenBuffers(1, &_vertex_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
   glBufferData(GL_ARRAY_BUFFER,
@@ -44,6 +51,7 @@ void Component::init()
 
 void Component::draw()
 {
+  unbind_texture();
   glBindBuffer(GL_ARRAY_BUFFER, _vertex_buffer);
   glVertexPointer(
       3,                  // size
@@ -66,4 +74,19 @@ void Component::draw()
   
   glDisableClientState(GL_VERTEX_ARRAY);
   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+  unbind_texture();
+}
+
+void Component::bind_texture()
+{
+    if (_texture) {
+        _texture->bind();
+    }
+}
+
+void Component::unbind_texture()
+{
+    if (_texture) {
+        _texture->unbind();
+    }
 }

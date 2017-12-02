@@ -45,6 +45,8 @@ void CCanvas::initializeGL()
      */
     textureTrain.setTexture();
     _x_wing.init();
+
+    tau = 1.0;
 }
 
 //-----------------------------------------------------------------------------
@@ -242,6 +244,7 @@ void CCanvas::paintGL()
 
     // Drawing the object with texture
 //    textureTrain.bind();
+    _x_wing.bind_texture();
     // You can stack new transformation matrix if you don't want
     // the previous transformations to apply on this object
     glPushMatrix();
@@ -250,7 +253,8 @@ void CCanvas::paintGL()
      *  GLfloat matrix[16];
      *  glGetFloatv (GL_MODELVIEW_MATRIX, matrix);
     */
-
+    tau += 1.0;
+//    glRotatef(tau, 0, 1, 0);
     _x_wing.draw();
     // Look at the PlyModel class to see how the drawing is done
     /*
@@ -263,4 +267,5 @@ void CCanvas::paintGL()
     // object with a new transformation and now you go back to the previous one
     glPopMatrix();
 //    textureTrain.unbind();
+    _x_wing.unbind_texture();
 }

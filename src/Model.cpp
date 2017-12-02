@@ -3,9 +3,9 @@
 #include <fstream>
 #include <sstream>
 
-Model::Model(const std::string & path)
+Model::Model(const std::string & path, const std::string & name)
 {
-  _load(path);
+  _load(path, name);
 }
 
 Component Model::_makeComponent(const std::vector<int>     & vertexIds,
@@ -13,7 +13,8 @@ Component Model::_makeComponent(const std::vector<int>     & vertexIds,
                                 const std::vector<int>     & normalIds,
                                 const std::vector<Point3d> & vertices,
                                 const std::vector<Point2d> & uvs,
-                                const std::vector<Point3d> & normals)
+                                const std::vector<Point3d> & normals,
+                                const std::string          & texture_path)
 {
   Component component;
   // For each vertex of each triangle
@@ -31,19 +32,23 @@ Component Model::_makeComponent(const std::vector<int>     & vertexIds,
     component.add_uv(uvs[uvId - 1]);
     component.add_normal(normals[normalId - 1]);
   }
+  if (texture_path != "") {
+    component.set_texture(texture_path);
+  }
   return component;
 }
 
-void Model::_load(const std::string & path)
+void Model::_load(const std::string & path, const std::string & name)
 {
   std::vector<int> vertexIds, uvIds, normalIds;
   std::vector<Point3d> vertices;
   std::vector<Point2d> uvs;
   std::vector<Point3d> normals;
+  std::string texture_path;
 
-  std::ifstream file(path);
+  std::ifstream file(path + name);
   if (!file.is_open()) {
-    std::cout << "Failed to open file " << path << std::endl;
+    std::cout << "Failed to open file " << path + name << std::endl;
     return;
   }
 
@@ -57,7 +62,8 @@ void Model::_load(const std::string & path)
     if (field == "g") {
       if (vertexIds.size() > 0) {
         _components.push_back(_makeComponent(vertexIds, uvIds, normalIds,
-                                             vertices , uvs  , normals));
+                                             vertices , uvs  , normals,
+                                             texture_path));
       }
       vertices.clear();
       uvs.clear();
@@ -65,6 +71,7 @@ void Model::_load(const std::string & path)
       vertexIds.clear();
       uvIds.clear();
       normalIds.clear();
+      texture_path = "";
       continue;
     }
 
@@ -109,10 +116,18 @@ void Model::_load(const std::string & path)
         normalIds.push_back(stoi(index));
       }
     }
+
+    // Texture
+    if (field == "usemtl") {
+        stream >> texture_path;
+        texture_path = path + texture_path;
+    }
+
   }
   if (vertexIds.size() > 0) {
     _components.push_back(_makeComponent(vertexIds, uvIds, normalIds,
-                                         vertices , uvs  , normals));
+                                         vertices , uvs  , normals,
+                                         texture_path));
   }
   file.close();
 }
@@ -126,7 +141,23 @@ void Model::init()
 
 void Model::draw()
 {
-  for (int i = 0; i < _components.size(); ++i) {
-    _components[i].draw();
+  for (Component & components : _components) {
+    components.draw();
   }
+}
+
+void Model::bind_texture()
+{
+    for (Component & component : _components) {
+        component.bind_texture();
+    }
+    //_components[4].bind_texture();
+}
+
+void Model::unbind_texture()
+{
+    for (Component & component : _components) {
+        component.unbind_texture();
+    }
+    //_components[4].unbind_texture();
 }

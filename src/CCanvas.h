@@ -28,9 +28,9 @@ class CCanvas : public QGLWidget
 public:
     explicit CCanvas(QWidget *parent = 0) : QGLWidget(parent),
         textureTrain("./media/models/train.jpg"),
-//        _x_wing("./media/models/train.obj")
-//        _x_wing("./media/models/vader-tie/vader-tie.obj")
-        _x_wing("./media/models/x-wing/x-wing.obj")
+//        _x_wing("./media/models/", "train.obj")
+//        _x_wing("./media/models/vader-tie/", "vader-tie.obj.out")
+        _x_wing("./media/models/x-wing/", "x-wing.obj")
     {
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -70,6 +70,8 @@ private:
     Texture textureTrain;
     // X-wing
     Model _x_wing;
+
+    GLfloat tau;
 };
 
 #endif 
