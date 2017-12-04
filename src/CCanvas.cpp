@@ -8,7 +8,8 @@ using namespace std;
 
 void CCanvas::initializeGL()
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 0.5f);			   // black background
+    glClearColor(0.56f, 0.82f, 1.0f, 1.0f);			   // black background
+
     glClearDepth(1.0f);								   // depth buffer setup
     glEnable(GL_DEPTH_TEST);						   // enables depth testing
     glDepthFunc(GL_LEQUAL);							   // the type of depth testing to do
@@ -17,7 +18,6 @@ void CCanvas::initializeGL()
 
     // One light source
     glEnable(GL_LIGHTING);
-
     glEnable(GL_LIGHT0);
     /*
      * The position is transformed by the modelview matrix when glLightfv is called (just as if it were
@@ -28,11 +28,11 @@ void CCanvas::initializeGL()
      * light in eye coordinates, and attenuation is enabled. The default position is (0,0,1,0); thus,
      * the default light source is directional, parallel to, and in the direction of the -z axis.
      */
-    GLfloat lightpos[] = {0.0, 0.0, 1.0, 0.0};
+    GLfloat lightpos[] = {0.0, -100.0, 1.0, 0.0};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     GLfloat lightAmb[]  = {0.3, 0.3, 0.3};
-    GLfloat lightDiff[] = {0.4, 0.4, 0.4};
+    GLfloat lightDiff[] = {1.0, 1.0, 1.0};
     GLfloat lightSpec[] = {0.5, 0.5, 0.5};
 
     glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpec);
@@ -46,7 +46,7 @@ void CCanvas::initializeGL()
     tau = 1;
     _x_wing.init();
     _vader_tie.init();
-    _terrain.generate(100);
+    _terrain.generate(1000);
 }
 
 //-----------------------------------------------------------------------------
@@ -177,7 +177,7 @@ void CCanvas::resizeGL(int width, int height)
 void CCanvas::setView(View _view) {
     switch(_view) {
     case Perspective:
-        glTranslatef(1.0, -2.5, -10.0);
+        glTranslatef(1.0, -10.f, -10.0);
         glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
         break;
     case Cockpit:
@@ -201,7 +201,7 @@ void CCanvas::paintGL()
     setView(View::Perspective);
 
     // You can always change the light position here if you want
-    GLfloat lightpos[] = {10.0f, 10.0f, 10.0f, 1.0f};
+    GLfloat lightpos[] = {10.0f, 1.0f, 10.0f, 0.0f};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     // Terrain
@@ -211,12 +211,14 @@ void CCanvas::paintGL()
 
     // X-wing
     glPushMatrix();
+    glTranslatef(0, 7.5+sin(tau/5)*0.25, 0);
+    glRotatef(sin(tau/3)*2.5, 1.0f, 1.0f, 0.0f);
     _x_wing.draw();
     glPopMatrix();
 
     // Vader tie fighter
     glPushMatrix();
-    glTranslatef(0, 5, -10);
+    glTranslatef(0, 15, -10);
     _vader_tie.draw();
     glPopMatrix();
 

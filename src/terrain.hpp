@@ -4,6 +4,7 @@
 #include "Point2.h"
 #include "Point3.h"
 #include "perlinnoise.hpp"
+#include "texture.hpp"
 
 struct Strip {
     std::vector<Point3d> vertices;
@@ -21,6 +22,7 @@ public:
 private:
     std::vector<Strip> _strips;
     siv::PerlinNoise _noiseGen;
+    Texture _texture;
 
     float _generateHeight(float x, float y);
     Point3d _computeNormal(float x, float y);

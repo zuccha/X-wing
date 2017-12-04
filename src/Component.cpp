@@ -41,6 +41,13 @@ void Component::init()
                &_vertices[0],
                GL_STATIC_DRAW);
 
+  glGenBuffers(1, &_normal_buffer);
+  glBindBuffer(GL_ARRAY_BUFFER, _normal_buffer);
+  glBufferData(GL_ARRAY_BUFFER,
+               _normals.size() * sizeof(GLfloat),
+               &_normals[0],
+               GL_STATIC_DRAW);
+
   glGenBuffers(1, &_uv_buffer);
   glBindBuffer(GL_ARRAY_BUFFER, _uv_buffer);
   glBufferData(GL_ARRAY_BUFFER,
@@ -61,6 +68,14 @@ void Component::draw()
       (void*)0            // array buffer offset
                   );
   glEnableClientState(GL_VERTEX_ARRAY);
+
+//  glBindBuffer(GL_ARRAY_BUFFER, _normal_buffer);
+//  glNormalPointer(
+//      GL_FLOAT,           // type
+//      0,                  // stride
+//      (void*)0            // array buffer offset
+//                  );
+//  glEnableClientState(GL_NORMAL_ARRAY);
   
   glBindBuffer(GL_ARRAY_BUFFER, _uv_buffer);
   glTexCoordPointer(
@@ -74,6 +89,7 @@ void Component::draw()
   glDrawArrays(GL_TRIANGLES, 0, _vertices.size() / 3);
   
   glDisableClientState(GL_VERTEX_ARRAY);
+//  glDisableClientState(GL_NORMAL_ARRAY);
   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 
   _unbind_texture();

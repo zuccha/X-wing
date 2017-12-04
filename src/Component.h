@@ -32,7 +32,10 @@ private:
   std::vector<GLfloat> _normals;
 
   GLuint _vertex_buffer;
+  GLuint _normal_buffer;
   GLuint _uv_buffer;
+
+
 
   std::shared_ptr<Texture> _texture;
 };
