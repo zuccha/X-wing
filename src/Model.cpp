@@ -94,6 +94,7 @@ void Model::_load(const std::string & path, const std::string & name)
     // Vertex normal
     if (field == "vn") {
       double x, y, z;
+      stream >> x >> y >> z;
       normals.push_back(Point3d(x, y, z));
       continue;
     }

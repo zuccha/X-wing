@@ -95,6 +95,7 @@ bool loadOBJ(const char * path,
     // Vertex normal
     if (field == "vn") {
       double x, y, z;
+      stream >> x >> y >> z;
       temp_normals.push_back(Point3d(x, y, z));
       continue;
     }

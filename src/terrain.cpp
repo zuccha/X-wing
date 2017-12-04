@@ -2,14 +2,14 @@
 #include <QtOpenGL>
 
 Terrain::Terrain():
-    _noiseGen(10),
+    _noiseGen(100),
     _texture("./media/models/sand4.jpg")
 {}
 
 float Terrain::_generateHeight(float x, float y) {
-    const float frequency = 0.015f;
+    const float frequency = 0.01f;
     const float amplitude = 25.0f;
-    return _noiseGen.noise(x*frequency, y*frequency)*amplitude;
+    return _noiseGen.octaveNoise(x*frequency, y*frequency, 3)*amplitude;
 }
 
 Point3d Terrain::_computeNormal(float x, float y) {

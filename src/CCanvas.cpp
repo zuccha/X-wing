@@ -46,7 +46,7 @@ void CCanvas::initializeGL()
     tau = 1;
     _x_wing.init();
     _vader_tie.init();
-    _terrain.generate(1000);
+    _terrain.generate(500);
 }
 
 //-----------------------------------------------------------------------------
@@ -201,7 +201,7 @@ void CCanvas::paintGL()
     setView(View::Perspective);
 
     // You can always change the light position here if you want
-    GLfloat lightpos[] = {10.0f, 1.0f, 10.0f, 0.0f};
+    GLfloat lightpos[] = {10.0f, 100.0f, 10.0f, 1.0f};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     // Terrain
@@ -211,8 +211,8 @@ void CCanvas::paintGL()
 
     // X-wing
     glPushMatrix();
-    glTranslatef(0, 7.5+sin(tau/5)*0.25, 0);
-    glRotatef(sin(tau/3)*2.5, 1.0f, 1.0f, 0.0f);
+    glTranslatef(0, 7.5+sin(tau/10)*0.25, 0);
+    glRotatef(sin(tau/6)*2.5, 1.0f, 1.0f, 0.0f);
     _x_wing.draw();
     glPopMatrix();
 
