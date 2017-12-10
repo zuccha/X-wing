@@ -19,9 +19,6 @@ HEADERS += ./Base.h \
            ./GLRender.h \
            ./Sphere.h \
            ./texture.hpp \
-           ./ObjModel.h \
-           ./PlyModel.h \
-           ./objloader.hpp \
            ./tinyply.h \
     XWing.h \
     Model.h \
@@ -35,9 +32,6 @@ SOURCES += ./CCanvas.cpp \
            ./GLRender.cpp \
            ./main.cpp \
            ./Sphere.cpp \
-           ./ObjModel.cpp \
-           ./PlyModel.cpp \
-           ./objloader.cpp \
            ./tinyply.cpp \
     XWing.cpp \
     Model.cpp \
