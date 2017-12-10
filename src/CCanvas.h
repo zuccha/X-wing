@@ -12,8 +12,6 @@
 #include "Base.h"
 #include "texture.hpp"
 
-#include "ObjModel.h"
-#include "PlyModel.h"
 #include "Model.h"
 #include "XWing.h"
 #include "Tie.h"
