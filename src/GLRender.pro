@@ -27,7 +27,8 @@ HEADERS += ./Base.h \
     Model.h \
     Component.h \
     perlinnoise.hpp \
-    terrain.hpp
+    terrain.hpp \
+    Tie.h
 
 # Source files
 SOURCES += ./CCanvas.cpp \
@@ -41,7 +42,8 @@ SOURCES += ./CCanvas.cpp \
     XWing.cpp \
     Model.cpp \
     Component.cpp \
-    terrain.cpp
+    terrain.cpp \
+    Tie.cpp
 
 # Forms
 FORMS += ./GLRender.ui

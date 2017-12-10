@@ -15,6 +15,8 @@
 #include "ObjModel.h"
 #include "PlyModel.h"
 #include "Model.h"
+#include "XWing.h"
+#include "Tie.h"
 #include "perlinnoise.hpp"
 #include "terrain.hpp"
 
@@ -75,8 +77,8 @@ private:
 
     // Models and textures
     Terrain _terrain;
-    Model _x_wing;
-    Model _vader_tie;
+    XWing _x_wing;
+    Tie   _vader_tie;
 
     GLfloat tau;
 };

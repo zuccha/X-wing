@@ -10,8 +10,11 @@ class Model
 public:
   Model(const std::string & path, const std::string & name);
 
-  void init();
-  void draw();
+  virtual void init();
+  virtual void draw();
+
+protected:
+  std::vector<Component> _components;
 
 private:
   void _load(const std::string & path, const std::string & name);
@@ -22,8 +25,6 @@ private:
                            const std::vector<Point2d> & uvs,
                            const std::vector<Point3d> & normals,
                            const std::string          & texture_path);
-  
-  std::vector<Component> _components;
 };
 
 #endif // MODEL_H
