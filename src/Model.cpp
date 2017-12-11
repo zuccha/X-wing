@@ -11,6 +11,9 @@ Model::Model(const std::string & path, const std::string & name)
 Component Model::_makeComponent(const std::vector<int>     & vertexIds,
                                 const std::vector<int>     & uvIds,
                                 const std::vector<int>     & normalIds,
+                                const std::vector<Point3d> & vertices_all,
+                                const std::vector<Point2d> & uvs_all,
+                                const std::vector<Point3d> & normals_all,
                                 const std::vector<Point3d> & vertices,
                                 const std::vector<Point2d> & uvs,
                                 const std::vector<Point3d> & normals,
@@ -23,14 +26,19 @@ Component Model::_makeComponent(const std::vector<int>     & vertexIds,
     int vertexId = vertexIds[i];
     int uvId     = uvIds[i];
     int normalId = normalIds[i];
-    // Deal with negative indexes
-    if (vertexId < 0) vertexId = vertices.size() + vertexId + 1;
-    if (uvId     < 0) uvId     = uvs.size()      + uvId     + 1;
-    if (normalId < 0) normalId = normals.size()  + normalId + 1;
-    // Put the attributes in buffers
-    component.add_vertex(vertices[vertexId - 1]);
-    component.add_uv(uvs[uvId - 1]);
-    component.add_normal(normals[normalId - 1]);
+    // Vertices
+    const Point3d & vertex = vertexId < 0
+                           ? vertices[vertices.size() + vertexId]
+                           : vertices_all[vertexId - 1];
+    const Point2d & uv     = uvId < 0
+                           ? uvs[uvs.size() + uvId]
+                           : uvs_all[uvId - 1];
+    const Point3d & normal = normalId < 0
+                           ? normals[normals.size() + normalId]
+                           : normals_all[normalId - 1];
+    component.add_vertex(vertex);
+    component.add_uv(uv);
+    component.add_normal(normal);
   }
   if (texture_path != "") {
     component.set_texture(texture_path);
@@ -41,9 +49,9 @@ Component Model::_makeComponent(const std::vector<int>     & vertexIds,
 void Model::_load(const std::string & path, const std::string & name)
 {
   std::vector<int> vertexIds, uvIds, normalIds;
-  std::vector<Point3d> vertices;
-  std::vector<Point2d> uvs;
-  std::vector<Point3d> normals;
+  std::vector<Point3d> vertices_all, vertices;
+  std::vector<Point2d> uvs_all, uvs;
+  std::vector<Point3d> normals_all, normals;
   std::string texture_path;
 
   std::ifstream file(path + name);
@@ -59,10 +67,11 @@ void Model::_load(const std::string & path, const std::string & name)
     stream >> field;
 
     // Component
-    if (field == "g") {
+    if (field == "g" || field == "o") {
       if (vertexIds.size() > 0) {
-        _components.push_back(_makeComponent(vertexIds, uvIds, normalIds,
-                                             vertices , uvs  , normals,
+        _components.push_back(_makeComponent(vertexIds,    uvIds,   normalIds,
+                                             vertices_all, uvs_all, normals_all,
+                                             vertices,     uvs,     normals,
                                              texture_path));
       }
       vertices.clear();
@@ -80,6 +89,7 @@ void Model::_load(const std::string & path, const std::string & name)
       double x, y, z;
       stream >> x >> y >> z;
       vertices.push_back(Point3d(x, y, z));
+      vertices_all.push_back(Point3d(x, y, z));
       continue;
     }
 
@@ -88,6 +98,7 @@ void Model::_load(const std::string & path, const std::string & name)
       double x, y;
       stream >> x >> y;
       uvs.push_back(Point2d(x, y));
+      uvs_all.push_back(Point2d(x, y));
       continue;
     }
     
@@ -96,6 +107,7 @@ void Model::_load(const std::string & path, const std::string & name)
       double x, y, z;
       stream >> x >> y >> z;
       normals.push_back(Point3d(x, y, z));
+      normals_all.push_back(Point3d(x, y, z));
       continue;
     }
     
@@ -126,8 +138,9 @@ void Model::_load(const std::string & path, const std::string & name)
 
   }
   if (vertexIds.size() > 0) {
-    _components.push_back(_makeComponent(vertexIds, uvIds, normalIds,
-                                         vertices , uvs  , normals,
+    _components.push_back(_makeComponent(vertexIds,    uvIds,   normalIds,
+                                         vertices_all, uvs_all, normals_all,
+                                         vertices,     uvs,     normals,
                                          texture_path));
   }
   file.close();

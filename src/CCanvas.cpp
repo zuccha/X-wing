@@ -215,6 +215,7 @@ void CCanvas::paintGL()
 //    glRotatef(sin(tau/6)*2.5, 1.0f, 1.0f, 0.0f);
     glTranslatef(3, 7, -2);
     glRotatef(tau / 4, 0.0, 1.0, 0.0);
+//    glRotatef(-51.5f, 0.0, 1.0, 0.0);
     _x_wing.draw();
     glPopMatrix();
 

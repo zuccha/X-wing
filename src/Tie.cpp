@@ -33,6 +33,6 @@ void Tie::draw()
       _components[i].draw();
       glPopMatrix();
     }
-    d += 0.001f;
+    d += 0.01f;
   }
 }
