@@ -132,7 +132,7 @@ void XWing::move()
     _d = p - _p;
 
     glPushMatrix();
-    glTranslated(_p.x(), _p.y(), _p.z();
+    glTranslated(_p.x(), _p.y(), _p.z());
 
     static double alpha     = 0.0;
     static double alpha_old = 0.0;
