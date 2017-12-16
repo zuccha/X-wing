@@ -16,7 +16,9 @@ private:
     typedef std::vector<Point3d> PointArray;
 
     std::vector<PointArray> _faces;
-    //Texture _texture;
+    std::vector<Point3d>    _normals;
+
+    Texture _texture;
 
 };
 
