@@ -24,23 +24,23 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         _camera.translate({delta, 0.0, 0.0});
         break;
     case Qt::Key_Shift:
-        _camera.translate({0.0, -delta, 0.0});
-        break;
-    case Qt::Key_Control:
         _camera.translate({0.0, delta, 0.0});
         break;
-//    case Qt::Key_Left:
-//        _camera.rotate(-1.0, {0,1.0,0});
-//        break;
-//    case Qt::Key_Right:
-//        _camera.rotate(1.0, {0,1.0,0});
-//        break;
-//    case Qt::Key_Up:
-//        _camera.rotate(-1.0, {1.0,0,0});
-//        break;
-//    case Qt::Key_Down:
-//        _camera.rotate(1.0, {1.0,0,0});
-//        break;
+    case Qt::Key_Control:
+        _camera.translate({0.0, -delta, 0.0});
+        break;
+    case Qt::Key_Left:
+        _camera.rotateX(-0.01);
+        break;
+    case Qt::Key_Right:
+        _camera.rotateX(0.01);
+        break;
+    case Qt::Key_Up:
+        _camera.rotateY(0.05);
+        break;
+    case Qt::Key_Down:
+        _camera.rotateY(-0.05);
+        break;
     }
 }
 
@@ -208,20 +208,17 @@ void CCanvas::resizeGL(int width, int height)
 //-----------------------------------------------------------------------------
 
 void CCanvas::setView(View _view) {
-    Point3d pos = _camera.getPos();
-//    double angle = _camera.getAngle() * PI/180;
-//    std::cout << angle << std::endl;
-//    Point3d axis = _camera.getRotAxis();
-    Point3d target = {pos.x(), pos.y(), (pos.z()-1.0)};
+    Point3d pos = _camera.getPosition();
+    double pitch = _camera.getPitch();
+    double yaw = _camera.getYaw() * PI;
+    Point3d target = {sin(yaw), sin(pitch), -cos(yaw)};
+    target += pos;
+
     switch(_view) {
     case Perspective:
         lookAt(pos.x(), pos.y(), pos.z(),
-
                target.x(), target.y(), target.z(),
-
                0.0, 1.0, 0.0);
-//        glTranslatef(pos.x(), pos.y(), pos.z());
-//        glRotatef(angle, axis.x(), axis.y(), axis.z());
         break;
 
     case Cockpit:
