@@ -188,7 +188,7 @@ void CCanvas::resizeGL(int width, int height)
 
     // front and back clipping plane at
     double n = -0.01;
-    double f = -1000.0;
+    double f = -10000.0;
 
     // frustum corners
      double t = -tan(beta * 3.14159 / 360.0) * n;
@@ -249,6 +249,9 @@ void CCanvas::paintGL()
     glPushMatrix();
     _terrain.draw();
     glPopMatrix();
+
+    //Skybox
+    _skybox.draw();
 
     // X-wing
     _x_wing.move();
