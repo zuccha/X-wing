@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include "Point3.h"
 #include "Component.h"
 
 class Model
@@ -13,9 +14,15 @@ public:
 
   virtual void init();
   virtual void draw();
-  virtual void move();
+  virtual void move(double time);
 
 protected:
+  double _rotation(double x, double y);
+  double _incline(double alpha, double beta);
+
+  Point3d _elipse_position(double time);
+  void _move_elipse(double time);
+
   std::vector<Component> _components;
 
   Point3d _o; // Offset
@@ -23,6 +30,7 @@ protected:
   Point3d _d; // Direction
   double  _s; // Speed
   double  _a; // Accelleration
+  double _alpha;
 
 private:
   void _load(const std::string & path, const std::string & name);

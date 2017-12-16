@@ -2,14 +2,16 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include "Base.h"
 
 Model::Model(const std::string & path, const std::string & name,
              const Point3d & o, const Point3d & p, const Point3d & d)
     : _o(o)
     , _p(p)
     , _d(d)
-    , _s(1.0f)
-    , _a(0.0f)
+    , _s(1.0)
+    , _a(0.0)
+    , _alpha(0.0)
 {
   _load(path, name);
 }
@@ -166,6 +168,53 @@ void Model::draw()
   }
 }
 
-void Model::move()
+void Model::move(double time)
 {
+    _move_elipse(time);
+}
+
+void Model::_move_elipse(double time)
+{
+    Point3d p = _p;
+
+    _p = _o + _elipse_position(time);
+    _d = p - _p;
+
+    glPushMatrix();
+    glTranslated(_p.x(), _p.y(), _p.z());
+
+    double alpha_old = _alpha;
+    _alpha      = _rotation(-_d.z(), -_d.x());
+    double beta = _incline(_alpha, alpha_old);
+
+    glRotated(_alpha, 0, 1, 0); // Movement direction
+    glRotated(beta,   0, 0, 1); // Curvature
+
+    this->draw();
+
+    glPopMatrix();
+}
+
+double Model::_rotation(double x, double y)
+{
+    double r = sqrt(x * x + y * y);
+    double alpha = acos(x / r);
+    if (y < 0.0) alpha = (2 * PI) - alpha;
+    return alpha * 180 / PI;
+}
+
+double Model::_incline(double alpha, double beta)
+{
+    double gamma = abs(alpha - beta) * -36.8;
+    return -90.0 <= gamma ? gamma : -90.0;
+}
+
+Point3d Model::_elipse_position(double time)
+{
+    constexpr double A = 12.0;
+    constexpr double B = 7.0;
+    double x = sin(time * _s) * A;
+    double y = 0.0;
+    double z = cos(time * _s) * B;
+    return Point3d(x, y, z);
 }

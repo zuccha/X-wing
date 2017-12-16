@@ -12,6 +12,7 @@ public:
 
     void init() override;
     void draw() override;
+    void move(double time) override;
 
     void explode(bool is_exploding) { _is_exploding = is_exploding; }
 

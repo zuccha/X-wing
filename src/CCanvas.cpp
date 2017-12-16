@@ -84,7 +84,7 @@ void CCanvas::initializeGL()
      */
 
 //    _camera_pos = {1.0, -10.f, -10.0};`
-    tau = 1;
+    tau = 0;
     _x_wing.init();
     _vader_tie.init();
     _terrain.generate(100);
@@ -254,13 +254,11 @@ void CCanvas::paintGL()
     glPopMatrix();
 
     // X-wing
-    _x_wing.move();
+    //
 
     // Vader tie fighter
-    glPushMatrix();
-    glTranslatef(0, 15, -10);
-    _vader_tie.draw();
-    glPopMatrix();
+    _vader_tie.move(double(tau));
+    _x_wing.move(double(tau));
 
-    tau += 0.05f;
+    tau += 0.02f;
 }
