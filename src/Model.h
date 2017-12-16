@@ -21,8 +21,8 @@ protected:
   Point3d _o; // Offset
   Point3d _p; // Position
   Point3d _d; // Direction
-  float   _s; // Speed
-  float   _a; // Accelleration
+  double  _s; // Speed
+  double  _a; // Accelleration
 
 private:
   void _load(const std::string & path, const std::string & name);

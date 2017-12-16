@@ -16,7 +16,7 @@ public:
     void battle_mode (bool is_battle_mode) { _is_battle_mode = is_battle_mode; }
 
 private:
-    Point3d _elipse(float time);
+    Point3d _elipse(double time);
 
     bool  _is_take_off;
     float _legs_offset;

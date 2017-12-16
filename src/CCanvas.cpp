@@ -6,8 +6,47 @@ using namespace std;
 
 //-----------------------------------------------------------------------------
 
+
+void CCanvas::keyPressEvent(QKeyEvent *event) {
+//    std::cout << "Pressed " << event->key() << std::endl;
+    double delta = 0.5;
+    switch(event->key()) {
+    case Qt::Key_W:
+        _camera.translate({0.0, 0.0, -delta});
+        break;
+    case Qt::Key_A:
+        _camera.translate({-delta, 0.0, 0.0});
+        break;
+    case Qt::Key_S:
+        _camera.translate({0.0, 0.0, delta});
+        break;
+    case Qt::Key_D:
+        _camera.translate({delta, 0.0, 0.0});
+        break;
+    case Qt::Key_Shift:
+        _camera.translate({0.0, -delta, 0.0});
+        break;
+    case Qt::Key_Control:
+        _camera.translate({0.0, delta, 0.0});
+        break;
+//    case Qt::Key_Left:
+//        _camera.rotate(-1.0, {0,1.0,0});
+//        break;
+//    case Qt::Key_Right:
+//        _camera.rotate(1.0, {0,1.0,0});
+//        break;
+//    case Qt::Key_Up:
+//        _camera.rotate(-1.0, {1.0,0,0});
+//        break;
+//    case Qt::Key_Down:
+//        _camera.rotate(1.0, {1.0,0,0});
+//        break;
+    }
+}
+
 void CCanvas::initializeGL()
 {
+    this->setFocusPolicy(Qt::StrongFocus);
     glClearColor(0.56f, 0.82f, 1.0f, 1.0f);			   // black background
 
     glClearDepth(1.0f);								   // depth buffer setup
@@ -43,6 +82,8 @@ void CCanvas::initializeGL()
      * Before you can use the texture you need to initialize it by calling the setTexture() method.
      * Before you can use OBJ/PLY model, you need to initialize it by calling init() method.
      */
+
+//    _camera_pos = {1.0, -10.f, -10.0};`
     tau = 1;
     _x_wing.init();
     _vader_tie.init();
@@ -96,44 +137,36 @@ void CCanvas::lookAt(const GLdouble eyex,
     GLdouble *mat = new GLdouble[16];
 
     // TODO: add computation for the lookat here!
-    Point3d X, Y, Z;
+    Point3d VP(eyex, eyey, eyez);
+            Point3d q(centerx, centery, centerz);
+            Point3d VUP(upx, upy, upz);
+            Point3d VPN = VP-q;
 
-    // create new coordinate system
-    Z = Point3d(eyex - centerx, eyey - centery, eyez - centerz);
-    Z.normalize();
+          Point3d p_p = VP;
+          Point3d z_p = VPN;
+          z_p.normalize();
+          Point3d x_p = VUP ^ z_p;
+          Point3d y_p = z_p ^ x_p;
 
-    // compute Y and X
-    Y = Point3d(upx, upy, upz);
-    X = Y ^ Z;
+          mat[0] = x_p.x();
+          mat[1] = y_p.x();
+          mat[2] = z_p.x();
+          mat[3] = 0;
 
-    // recompute X
-    Y = Z ^ X;
+          mat[4] = x_p.y();
+          mat[5] = y_p.y();
+          mat[6] = z_p.y();
+          mat[7] = 0;
 
-    // normalize
-    X.normalize();
-    Y.normalize();
+          mat[8] = x_p.z();
+          mat[9] = y_p.z();
+          mat[10] = z_p.z();
+          mat[11] = 0;
 
-    Point3d eye(eyex, eyey, eyez);
-
-    mat[0] = X.x();
-    mat[1] = X.y();
-    mat[2] = X.z();
-    mat[3] = -X * eye;
-
-    mat[4] = Y.x();
-    mat[5] = Y.y();
-    mat[6] = Y.z();
-    mat[7] = -Y * eye;
-
-    mat[8]  = Z.x();
-    mat[9]  = Z.y();
-    mat[10] = Z.z();
-    mat[11] = -Z * eye;
-
-    mat[12] = 0.0;
-    mat[13] = 0.0;
-    mat[14] = 0.0;
-    mat[15] = 1.0;
+          mat[12] = -(x_p * p_p);
+          mat[13] = -(y_p * p_p);
+          mat[14] = -(z_p * p_p);
+          mat[15] = 1;
 
     glMultMatrixd(mat);
 
@@ -158,15 +191,15 @@ void CCanvas::resizeGL(int width, int height)
     double f = -1000.0;
 
     // frustum corners
-    // double t = -tan(beta * 3.14159 / 360.0) * n;
-    // double b = -t;
-    // double r = gamma * t;
-    // double l = -r;
+     double t = -tan(beta * 3.14159 / 360.0) * n;
+     double b = -t;
+     double r = gamma * t;
+     double l = -r;
 
     // set projection matrix
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    // glFrustum(l,r, b,t, -n,-f);
+//     glFrustum(l,r, b,t, -n,-f);
 
     // alternatively, directly from alpha and gamma
     glPerspective(beta, gamma, -n, -f);
@@ -175,11 +208,22 @@ void CCanvas::resizeGL(int width, int height)
 //-----------------------------------------------------------------------------
 
 void CCanvas::setView(View _view) {
+    Point3d pos = _camera.getPos();
+//    double angle = _camera.getAngle() * PI/180;
+//    std::cout << angle << std::endl;
+//    Point3d axis = _camera.getRotAxis();
+    Point3d target = {pos.x(), pos.y(), (pos.z()-1.0)};
     switch(_view) {
     case Perspective:
-        glTranslatef(1.0, -10.f, -10.0);
-        glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
+        lookAt(pos.x(), pos.y(), pos.z(),
+
+               target.x(), target.y(), target.z(),
+
+               0.0, 1.0, 0.0);
+//        glTranslatef(pos.x(), pos.y(), pos.z());
+//        glRotatef(angle, axis.x(), axis.y(), axis.z());
         break;
+
     case Cockpit:
         // Maybe you want to have an option to view the scene from the train cockpit, up to you
         break;
@@ -201,7 +245,7 @@ void CCanvas::paintGL()
     setView(View::Perspective);
 
     // You can always change the light position here if you want
-    GLfloat lightpos[] = {10.0f, 100.0f, 10.0f, 1.0f};
+    GLfloat lightpos[] = {10.0f, 100.0f, 10.0f, 0.0f};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     // Terrain

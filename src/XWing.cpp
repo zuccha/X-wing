@@ -1,6 +1,9 @@
 #include "XWing.h"
 #include "Base.h"
 
+constexpr double A = 12.0;
+constexpr double B = 7.0;
+
 XWing::XWing(const std::string & path, const std::string & name)
     : Model(path, name, Point3d(3.0, 7.0, -2.0), Point3d(), Point3d())
     , _is_take_off    (false)
@@ -113,38 +116,45 @@ double rotation(double x, double y)
     return alpha * 180 / PI;
 }
 
-double incline(double x, double y)
+double incline(double alpha, double beta)
 {
-    std::cout << sqrt(x*x + y*y) << std::endl;
-    return 0.0;
+    double gamma = abs(alpha - beta) * -36.8;
+    return -90.0 <= gamma ? gamma : -90.0;
 }
 
 
 void XWing::move()
 {
-    static float tau = 0.0f;
+    static double tau = 0.0;
 
     Point3d p = _p;
-    _p = _elipse(tau);
+    _p = _o + _elipse(tau);
     _d = p - _p;
 
     glPushMatrix();
-    glTranslated(_o.x(), _o.y(), _o.z());
-    glTranslated(_p.x(), _p.y(), _p.z());
-    glRotated(rotation(-_d.z(), -_d.x()), 0, 1, 0);
-    glRotated(incline(_d.x(), _d.z()),    0, 0, 1);
-    glScalef(0.2f, 0.2f, 0.2f);
+    glTranslated(_p.x(), _p.y(), _p.z();
+
+    static double alpha     = 0.0;
+    static double alpha_old = 0.0;
+
+    alpha_old   = alpha;
+    alpha       = rotation(-_d.z(), -_d.x());
+    double beta = incline(alpha, alpha_old);
+    glRotated(alpha, 0, 1, 0); // Movement direction
+    glRotated(beta,  0, 0, 1); // Curvature
+
+    glScalef(0.1f, 0.1f, 0.1f);
 
     this->draw();
 
     glPopMatrix();
-    tau += 0.02f;
+    tau += 0.02;
 }
 
-Point3d XWing::_elipse(float time)
+Point3d XWing::_elipse(double time)
 {
-    double x = sin(time * _s) * 5.0;
+    double x = sin(time * _s) * A;
     double y = 0.0;
-    double z = cos(time * _s) * 5.0;
+    double z = cos(time * _s) * B;
     return Point3d(x, y, z);
 }
