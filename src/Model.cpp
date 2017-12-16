@@ -3,7 +3,13 @@
 #include <fstream>
 #include <sstream>
 
-Model::Model(const std::string & path, const std::string & name)
+Model::Model(const std::string & path, const std::string & name,
+             const Point3d & o, const Point3d & p, const Point3d & d)
+    : _o(o)
+    , _p(p)
+    , _d(d)
+    , _s(1.0f)
+    , _a(0.0f)
 {
   _load(path, name);
 }
@@ -158,4 +164,8 @@ void Model::draw()
   for (Component & components : _components) {
     components.draw();
   }
+}
+
+void Model::move()
+{
 }

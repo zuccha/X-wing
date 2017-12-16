@@ -8,13 +8,21 @@
 class Model
 {
 public:
-  Model(const std::string & path, const std::string & name);
+  Model(const std::string & path, const std::string & name,
+        const Point3d & o, const Point3d & p, const Point3d & d);
 
   virtual void init();
   virtual void draw();
+  virtual void move();
 
 protected:
   std::vector<Component> _components;
+
+  Point3d _o; // Offset
+  Point3d _p; // Position
+  Point3d _d; // Direction
+  float   _s; // Speed
+  float   _a; // Accelleration
 
 private:
   void _load(const std::string & path, const std::string & name);

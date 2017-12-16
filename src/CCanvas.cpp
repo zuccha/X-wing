@@ -210,14 +210,7 @@ void CCanvas::paintGL()
     glPopMatrix();
 
     // X-wing
-    glPushMatrix();
-    //glTranslatef(0, 7.5+sin(tau/10)*0.25, 0);
-//    glRotatef(sin(tau/6)*2.5, 1.0f, 1.0f, 0.0f);
-    glTranslatef(3, 7, -2);
-    glRotatef(tau / 4, 0.0, 1.0, 0.0);
-//    glRotatef(-51.5f, 0.0, 1.0, 0.0);
-    _x_wing.draw();
-    glPopMatrix();
+    _x_wing.move();
 
     // Vader tie fighter
     glPushMatrix();
@@ -225,5 +218,5 @@ void CCanvas::paintGL()
     _vader_tie.draw();
     glPopMatrix();
 
-    tau++;
+    tau += 0.05f;
 }
