@@ -17,6 +17,7 @@
 #include "Tie.h"
 #include "perlinnoise.hpp"
 #include "terrain.hpp"
+#include "Camera.h"
 
 using namespace std;
 
@@ -42,6 +43,7 @@ protected:
     void initializeGL();
     void resizeGL(int width, int height);
     void paintGL();
+    void keyPressEvent(QKeyEvent * event);
 
 private:
 
@@ -72,6 +74,8 @@ private:
 
 
     void setView(View _view);
+
+    Camera _camera;
 
     // Models and textures
     Terrain _terrain;
