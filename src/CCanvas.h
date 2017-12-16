@@ -18,6 +18,7 @@
 #include "perlinnoise.hpp"
 #include "terrain.hpp"
 #include "Camera.h"
+#include "Skybox.h"
 
 using namespace std;
 
@@ -32,7 +33,8 @@ public:
     explicit CCanvas(QWidget *parent = 0) : QGLWidget(parent),
 //        _x_wing   ("./media/models/", "train.obj")
         _x_wing   ("./media/models/x-wing/", "x-wing.obj"),
-        _vader_tie("./media/models/vader-tie/", "vader-tie.obj")
+        _vader_tie("./media/models/vader-tie/", "vader-tie.obj"),
+        _skybox(Skybox())
     {
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -81,6 +83,7 @@ private:
     Terrain _terrain;
     XWing _x_wing;
     Tie   _vader_tie;
+    Skybox _skybox;
 
     GLfloat tau;
 };

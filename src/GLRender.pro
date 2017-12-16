@@ -26,7 +26,8 @@ HEADERS += ./Base.h \
     perlinnoise.hpp \
     terrain.hpp \
     Tie.h \
-    Camera.h
+    Camera.h \
+    Skybox.h
 
 # Source files
 SOURCES += ./CCanvas.cpp \
@@ -39,7 +40,8 @@ SOURCES += ./CCanvas.cpp \
     Component.cpp \
     terrain.cpp \
     Tie.cpp \
-    Camera.cpp
+    Camera.cpp \
+    Skybox.cpp
 
 # Forms
 FORMS += ./GLRender.ui
