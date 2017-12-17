@@ -23,6 +23,12 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_D:
         _camera.translate({delta, 0.0, 0.0});
         break;
+    case Qt::Key_Q:
+        _camera.rotateZ(0.05);
+        break;
+    case Qt::Key_E:
+        _camera.rotateZ(-0.05);
+        break;
     case Qt::Key_Shift:
         _camera.translate({0.0, delta, 0.0});
         break;
@@ -30,10 +36,10 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         _camera.translate({0.0, -delta, 0.0});
         break;
     case Qt::Key_Left:
-        _camera.rotateX(-0.01);
+        _camera.rotateX(-0.05);
         break;
     case Qt::Key_Right:
-        _camera.rotateX(0.01);
+        _camera.rotateX(0.05);
         break;
     case Qt::Key_Up:
         _camera.rotateY(0.05);
@@ -188,15 +194,18 @@ void CCanvas::resizeGL(int width, int height)
 void CCanvas::setView(View _view) {
     Point3d pos = _camera.getPosition();
     double pitch = _camera.getPitch();
-    double yaw = _camera.getYaw() * PI;
+    double yaw = _camera.getYaw();
+    double roll = _camera.getRoll();
     Point3d target = {sin(yaw), sin(pitch), -cos(yaw)};
     target += pos;
+
+    Point3d up = {sin(roll), cos(roll), 0.0};
 
     switch(_view) {
     case Perspective:
         lookAt(pos.x(), pos.y(), pos.z(),
                target.x(), target.y(), target.z(),
-               0.0, 1.0, 0.0);
+               up.x(), up.y(), up.z());
         break;
 
     case Cockpit:
