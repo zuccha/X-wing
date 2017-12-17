@@ -109,7 +109,7 @@ void XWing::draw()
 
 void XWing::move(double time)
 {
-    double steer_h = 1.0;
+    double steer_h = 45.0;
     double steer_v = 0.0;
 
 //    _s = 1.0;
@@ -119,9 +119,9 @@ void XWing::move(double time)
     _p = _p + _d * _s;
 
     glPushMatrix();
+    glTranslated(_p.x(), _p.y(), _p.z());
     glRotated(_angle_h, 0.0, 1.0, 0.0);
     glRotated(_angle_v, 1.0, 0.0, 0.0);
-    glTranslated(_p.x(), _p.y(), _p.z());
     glScaled(0.2, 0.2, 0.2);
 
     this->draw();

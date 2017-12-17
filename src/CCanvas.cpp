@@ -70,7 +70,7 @@ void CCanvas::initializeGL()
     GLfloat lightpos[] = {0.0, -100.0, 1.0, 0.0};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
-    GLfloat lightAmb[]  = {0.3, 0.3, 0.3};
+    GLfloat lightAmb[]  = {0.6, 0.6, 0.6};
     GLfloat lightDiff[] = {1.0, 1.0, 1.0};
     GLfloat lightSpec[] = {0.5, 0.5, 0.5};
 
@@ -88,6 +88,7 @@ void CCanvas::initializeGL()
     _x_wing.init();
     _vader_tie.init();
     _terrain.generate(100);
+    _skybox.init();
 }
 
 //-----------------------------------------------------------------------------
@@ -242,7 +243,7 @@ void CCanvas::paintGL()
     setView(View::Perspective);
 
     // You can always change the light position here if you want
-    GLfloat lightpos[] = {10.0f, 100.0f, 10.0f, 0.0f};
+    GLfloat lightpos[] = {10.0f, 1000.0f, 10.0f, 0.0f};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     // Terrain
@@ -251,7 +252,9 @@ void CCanvas::paintGL()
     glPopMatrix();
 
     //Skybox
+    glPushMatrix();
     _skybox.draw();
+    glPopMatrix();
 
     // X-wing
     //
