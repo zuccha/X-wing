@@ -9,7 +9,7 @@ using namespace std;
 
 void CCanvas::keyPressEvent(QKeyEvent *event) {
 //    std::cout << "Pressed " << event->key() << std::endl;
-    double delta = 0.5;
+    double delta = 10.0;
     switch(event->key()) {
     case Qt::Key_W:
         _camera.translate({0.0, 0.0, -delta});
@@ -23,10 +23,10 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_D:
         _camera.translate({delta, 0.0, 0.0});
         break;
-    case Qt::Key_Shift:
+    case Qt::Key_Q:
         _camera.translate({0.0, delta, 0.0});
         break;
-    case Qt::Key_Control:
+    case Qt::Key_E:
         _camera.translate({0.0, -delta, 0.0});
         break;
     case Qt::Key_Left:

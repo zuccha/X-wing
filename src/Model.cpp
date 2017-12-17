@@ -9,7 +9,7 @@ Model::Model(const std::string & path, const std::string & name,
     : _o(o)
     , _p(p)
     , _d(d)
-    , _s(1.0)
+    , _s(0.01)
     , _a(0.0)
     , _alpha(0.0)
 {
@@ -69,6 +69,7 @@ void Model::_load(const std::string & path, const std::string & name)
   }
 
   std::string line;
+  //int g = 0;
   while (std::getline(file, line)) {
     std::stringstream stream(line);
     std::string field;
@@ -76,6 +77,11 @@ void Model::_load(const std::string & path, const std::string & name)
 
     // Component
     if (field == "g" || field == "o") {
+
+      //std::string name;
+      //stream >> name;
+      //std::cout << g++ << "\t" << name << std::endl;
+
       if (vertexIds.size() > 0) {
         _components.push_back(_makeComponent(vertexIds,    uvIds,   normalIds,
                                              vertices_all, uvs_all, normals_all,

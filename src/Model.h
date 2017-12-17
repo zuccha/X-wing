@@ -32,6 +32,9 @@ protected:
   double  _a; // Accelleration
   double _alpha;
 
+  double _angle_h = 0.0;
+  double _angle_v = 0.0;
+
 private:
   void _load(const std::string & path, const std::string & name);
   Component _makeComponent(const std::vector<int>     & vertexIds,
