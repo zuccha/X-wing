@@ -9,7 +9,7 @@ Model::Model(const std::string & path, const std::string & name,
     : _o(o)
     , _p(p)
     , _d(d)
-    , _s(0.01)
+    , _s(1.0)
     , _a(0.0)
     , _alpha(0.0)
 {

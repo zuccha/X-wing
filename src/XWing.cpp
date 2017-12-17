@@ -2,7 +2,7 @@
 #include "Base.h"
 
 XWing::XWing(const std::string & path, const std::string & name)
-    : Model(path, name, Point3d(3.0, 7.0, -2.0), Point3d(), Point3d())
+    : Model(path, name, Point3d(5.0, 0.0, -20.0), Point3d(), Point3d())
     , _is_take_off    (false)
     , _legs_offset    (0.0f)
     , _is_battle_mode (false)
@@ -47,6 +47,9 @@ void XWing::draw()
           _wings_degree = 0.0f;
       }
     }
+
+    glPushMatrix();
+    glScalef(0.35f, 0.35f, 0.35f);
 
     // Wing 1
     glPushMatrix();
@@ -105,36 +108,39 @@ void XWing::draw()
     glTranslatef(0.0f, _legs_offset, 0.0f);
     _components[12].draw(); // HULL_SIDE7
     glPopMatrix();
+
+    glPopMatrix();
 }
 
 void XWing::move(double time)
 {
-    double steer_h = 45.0;
-    double steer_v = 0.0;
+//    double steer_h = 0.5;
+//    double steer_v = 0.0;
 
-//    _s = 1.0;
-    _angle_h += steer_h;
-//    _angle_h = 45;
-//    _angle_v = 45;
-    _p = _p + _d * _s;
+//    _s = 0.01;
+//    _angle_h += steer_h;
+//    _angle_v += steer_v;
+//    _p = _p + _d * _s;
 
-    glPushMatrix();
-    glTranslated(_p.x(), _p.y(), _p.z());
-    glRotated(_angle_h, 0.0, 1.0, 0.0);
-    glRotated(_angle_v, 1.0, 0.0, 0.0);
-    glScaled(0.2, 0.2, 0.2);
+//    glPushMatrix();
+//    glRotated(_angle_h, 0.0, 1.0, 0.0);
+//    glRotated(_angle_v, 1.0, 0.0, 0.0);
+//    glTranslated(_p.x(), _p.y(), _p.z());
+//    glRotated(180, 0.0, 1.0, 0.0);
+//    glScaled(0.2, 0.2, 0.2);
 
-    this->draw();
+//    this->draw();
 
-//    glScalef(0.2f, 0.2f, 0.2f);
-//    if (time < 5.0) {
-//      _o = Point3d(_o.x(), _o.y() + 0.1, _o.z());
-//      glPushMatrix();
-//      glTranslated(_o.x(), _o.y(), _o.z());
-//      this->draw();
-//      glPopMatrix();
-//    } else {
-//      Model::move(time);
-//    }
-    glPopMatrix();
+
+    if (time < 5.0) {
+      _o = Point3d(_o.x(), time, _o.z());
+      _p = _o;
+      glPushMatrix();
+      glTranslated(_p.x(), _p.y(), _p.z());
+      glRotated(18.0 * time, 0.0, 1.0, 0.0);
+      this->draw();
+      glPopMatrix();
+    } else {
+      Model::move(time);
+    }
 }
