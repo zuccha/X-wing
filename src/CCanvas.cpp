@@ -55,29 +55,6 @@ void CCanvas::initializeGL()
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // really nice perspective calculations
     glShadeModel(GL_SMOOTH);
 
-    // One light source
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    /*
-     * The position is transformed by the modelview matrix when glLightfv is called (just as if it were
-     * a point), and it is stored in eye coordinates. If the w component of the position is 0.0,
-     * the light is treated as a directional source. Diffuse and specular lighting calculations take
-     * the light's direction, but not its actual position, into account, and attenuation is disabled.
-     * Otherwise, diffuse and specular lighting calculations are based on the actual location of the
-     * light in eye coordinates, and attenuation is enabled. The default position is (0,0,1,0); thus,
-     * the default light source is directional, parallel to, and in the direction of the -z axis.
-     */
-    GLfloat lightpos[] = {0.0, -100.0, 1.0, 0.0};
-    glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
-
-    GLfloat lightAmb[]  = {0.6, 0.6, 0.6};
-    GLfloat lightDiff[] = {1.0, 1.0, 1.0};
-    GLfloat lightSpec[] = {0.5, 0.5, 0.5};
-
-    glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpec);
-    glLightfv(GL_LIGHT0, GL_AMBIENT,  lightAmb);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE,  lightDiff);
-
     /*
      * Before you can use the texture you need to initialize it by calling the setTexture() method.
      * Before you can use OBJ/PLY model, you need to initialize it by calling init() method.
@@ -242,18 +219,30 @@ void CCanvas::paintGL()
     // Setup the current view
     setView(View::Perspective);
 
+    //Skybox (not lit)
+    glPushMatrix();
+    _skybox.draw();
+    glPopMatrix();
+
+    // One light source
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    GLfloat lightAmb[]  = {0.6, 0.6, 0.6};
+    GLfloat lightDiff[] = {1.0, 1.0, 1.0};
+    GLfloat lightSpec[] = {0.5, 0.5, 0.5};
+
+    glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpec);
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  lightAmb);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  lightDiff);
+
     // You can always change the light position here if you want
-    GLfloat lightpos[] = {10.0f, 1000.0f, 10.0f, 0.0f};
+    GLfloat lightpos[] = {10.0f, -1000.0f, 10.0f, 0.0f};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     // Terrain
     glPushMatrix();
     _terrain.draw();
-    glPopMatrix();
-
-    //Skybox
-    glPushMatrix();
-    _skybox.draw();
     glPopMatrix();
 
     // X-wing
@@ -264,4 +253,7 @@ void CCanvas::paintGL()
     _x_wing.move(double(tau));
 
     tau += 0.02f;
+
+    glDisable(GL_LIGHT0);
+    glDisable(GL_LIGHTING);
 }
