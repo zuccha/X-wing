@@ -9,8 +9,9 @@ Model::Model(const std::string & path, const std::string & name,
     : _o(o)
     , _p(p)
     , _d(d)
-    , _s(1.0)
+    , _s(0.0)
     , _a(0.0)
+    , _t(0.0)
     , _alpha(0.0)
 {
   _load(path, name);
@@ -183,7 +184,7 @@ void Model::_move_elipse(double time)
 {
     Point3d p = _p;
 
-    _p = _o + _elipse_position(time);
+    _p = _o + _elipse_position(_t);
     _d = p - _p;
 
     glPushMatrix();
@@ -219,8 +220,15 @@ Point3d Model::_elipse_position(double time)
 {
     constexpr double A = 50.0;
     constexpr double B = 35.0;
-    double x = sin(time * _s) * A;
+    double x = sin(time) * A;
     double y = 0.0;
-    double z = cos(time * _s) * B;
+    double z = cos(time) * B;
     return Point3d(x, y, z);
+
+//    constexpr double A = 50.0;
+//    constexpr double B = 75.0;
+//    double x = sin(time * _s) * A + cos(time*8 * _s)*0.20;
+//    double y = sin(time*8 * _s)*0.25;
+//    double z = cos(time/2 * _s) * B + sin(time*5 * _s)*0.2;
+//    return Point3d(x, y, z);
 }

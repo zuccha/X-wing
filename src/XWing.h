@@ -23,6 +23,9 @@ private:
     bool  _is_battle_mode;
     float _wings_degree;
     static constexpr float WINGS_MAX_DEGREE = 10.0f;
+
+    bool _s_decrease = false;
+    bool _s_stable   = false;
 };
 
 #endif // XWING_H

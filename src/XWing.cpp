@@ -2,7 +2,7 @@
 #include "Base.h"
 
 XWing::XWing(const std::string & path, const std::string & name)
-    : Model(path, name, Point3d(5.0, 0.0, -20.0), Point3d(), Point3d())
+    : Model(path, name, Point3d(5.0, 20.0, -20.0), Point3d(), Point3d())
     , _is_take_off    (false)
     , _legs_offset    (0.0f)
     , _is_battle_mode (false)
@@ -114,34 +114,29 @@ void XWing::draw()
 
 void XWing::move(double time)
 {
-//    double steer_h = 0.5;
-//    double steer_v = 0.0;
-
-//    _s = 0.01;
-//    _angle_h += steer_h;
-//    _angle_v += steer_v;
-//    _p = _p + _d * _s;
-
-//    glPushMatrix();
-//    glRotated(_angle_h, 0.0, 1.0, 0.0);
-//    glRotated(_angle_v, 1.0, 0.0, 0.0);
-//    glTranslated(_p.x(), _p.y(), _p.z());
-//    glRotated(180, 0.0, 1.0, 0.0);
-//    glScaled(0.2, 0.2, 0.2);
-
-//    this->draw();
-
-
     if (time < 5.0) {
-//      _o = _elipse_position(5.0);
-      _o = Point3d(_o.x(), time * 4.0, _o.z());
-      _p = _o;
+      _p = _elipse_position(0.0);
+      _p = Point3d(_p.x() + _o.x(), time * 4.0, _p.z() + _o.z());
       glPushMatrix();
       glTranslated(_p.x(), _p.y(), _p.z());
       glRotated(18.0 * time, 0.0, 1.0, 0.0);
       this->draw();
       glPopMatrix();
     } else {
+      if (!_s_stable) {
+        if (_s_decrease) {
+          _s -= 0.0001;
+          if (_s < 0.02) {
+            _s_stable = true;
+            _s = 0.02;
+          }
+        } else if (_s < 0.038) {
+          _s += 0.0001;
+        } else {
+          _s_decrease = true;
+        }
+      }
       Model::move(time);
+      _t += _s;
     }
 }

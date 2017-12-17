@@ -30,10 +30,8 @@ protected:
   Point3d _d; // Direction
   double  _s; // Speed
   double  _a; // Accelleration
+  double  _t;
   double _alpha;
-
-  double _angle_h = 0.0;
-  double _angle_v = 0.0;
 
 private:
   void _load(const std::string & path, const std::string & name);
