@@ -22,6 +22,10 @@ public:
   double alpha() { return _alpha * PI / 180.0; }
   double beta() { return _beta * PI / 180.0; }
 
+  double s() { return _s; }
+
+  void speed(double n);
+
 protected:
   double _rotation(double x, double y);
   double _incline(double alpha, double beta);

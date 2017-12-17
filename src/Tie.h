@@ -14,6 +14,8 @@ public:
     void draw() override;
     void move(double time) override;
 
+    bool is_exploding() { return _is_exploding; }
+
     void explode(bool is_exploding) { _is_exploding = is_exploding; }
 
 private:

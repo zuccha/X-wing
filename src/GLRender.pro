@@ -27,7 +27,8 @@ HEADERS += ./Base.h \
     terrain.hpp \
     Tie.h \
     Camera.h \
-    Skybox.h
+    Skybox.h \
+    Projectile.h
 
 # Source files
 SOURCES += ./CCanvas.cpp \
@@ -41,7 +42,8 @@ SOURCES += ./CCanvas.cpp \
     terrain.cpp \
     Tie.cpp \
     Camera.cpp \
-    Skybox.cpp
+    Skybox.cpp \
+    Projectile.cpp
 
 # Forms
 FORMS += ./GLRender.ui

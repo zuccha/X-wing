@@ -2,7 +2,7 @@
 #include "Base.h"
 
 XWing::XWing(const std::string & path, const std::string & name)
-    : Model(path, name, Point3d(5.0, 20.0, -20.0), Point3d(), Point3d())
+    : Model(path, name, Point3d(5.0, 20.0, -70.0), Point3d(), Point3d())
     , _is_take_off    (false)
     , _legs_offset    (0.0f)
     , _is_battle_mode (false)
@@ -132,7 +132,7 @@ void XWing::move(double time)
             _s = 0.035;
           }
         } else if (_s < 0.06) {
-          _s += 0.0002;
+          _s += 0.00015;
         } else {
           _s_decrease = true;
         }

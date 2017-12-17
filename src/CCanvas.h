@@ -5,6 +5,7 @@
 #define CCANVAS_H
 
 #include <iostream>
+#include <list>
 #include <QtOpenGL>
 #include <QGLWidget>
 #include <QTimer>
@@ -19,6 +20,7 @@
 #include "terrain.hpp"
 #include "Camera.h"
 #include "Skybox.h"
+#include "Projectile.h"
 
 using namespace std;
 
@@ -85,6 +87,7 @@ private:
     XWing _x_wing;
     Tie   _vader_tie;
     Skybox _skybox;
+    std::list<Projectile> _projectiles;
 
     GLfloat tau;
 };

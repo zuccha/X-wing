@@ -1,6 +1,7 @@
 #include "CCanvas.h"
 #include "Base.h"
 #include "Sphere.h"
+#include "Projectile.h"
 
 using namespace std;
 
@@ -47,6 +48,23 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_Down:
         _camera.rotateY(-0.05);
         break;
+    case Qt::Key_P:
+        if (_x_wing.is_battle_mode()) {
+          const Point3d p = _x_wing.p();
+          double angle = _x_wing.alpha() * 180 / PI;
+          _projectiles.push_back(Projectile(p, angle));
+        }
+        break;
+    case Qt::Key_N:
+        if (_x_wing.is_stable()) {
+          _x_wing.speed(0.0005);
+        }
+        break;
+    case Qt::Key_M:
+        if (_x_wing.is_stable()) {
+          _x_wing.speed(-0.0005);
+        }
+        break;
     }
 }
 
@@ -74,7 +92,7 @@ void CCanvas::initializeGL()
     _skybox.init();
 
     _camera.setPosition(Point3d(1.0, 50.0, 30.0));
-    _camera.rotateY(-PI/4);
+//    _camera.rotateY(-PI/4);
 }
 
 //-----------------------------------------------------------------------------
@@ -237,7 +255,7 @@ void CCanvas::paintGL()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Setup the current view
-    setView(View::Cockpit);
+    setView(View::Perspective);
 
     //Skybox (not lit)
     glPushMatrix();
@@ -284,6 +302,31 @@ void CCanvas::paintGL()
     _cockpit.setYaw(-_x_wing.alpha() + PI);
     _cockpit.setRoll(_x_wing.beta());
     _cockpit.setPosition(_x_wing.p() + Point3d(0.0, 0.5, 0.0));
+
+    // Projectiles
+    for (Projectile & projectile : _projectiles) {
+      projectile.move(tau);
+    }
+
+    // Check if projectile destroies tie
+    if (!_vader_tie.is_exploding()) {
+      for (Projectile & projectile : _projectiles) {
+        double d = (projectile.p() - _vader_tie.p()).norm();
+        if (d < 15.0) {
+          _vader_tie.explode(true);
+        }
+      }
+    }
+
+    // Check if x-wing collides with tie
+    if ((_x_wing.p() - _vader_tie.p()).norm() < 10.0) {
+        _vader_tie.explode(true);
+    }
+
+    // Remove old projectiles
+    while (_projectiles.front().t() > 200) {
+        _projectiles.pop_front();
+    }
 
     tau += 0.02f;
 

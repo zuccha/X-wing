@@ -232,3 +232,10 @@ Point3d Model::_elipse_position(double time)
     double z = cos(time/2) * B + sin(time*5) * 0.2;
     return Point3d(x, y, z);
 }
+
+void Model::speed(double n)
+{
+  if (0.0 <= _s + n && _s + n < 0.06) {
+    _s += n;
+  }
+}
