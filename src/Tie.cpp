@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 Tie::Tie(const std::string & path, const std::string & name)
-    : Model         (path, name, Point3d(0, 15, -10), Point3d(), Point3d())
+    : Model         (path, name, Point3d(5.0, 20.0, -20.0), Point3d(), Point3d())
     , _is_exploding (false)
 {
     for (unsigned int i = 0; i < _components.size(); ++i) {

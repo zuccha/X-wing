@@ -9,7 +9,7 @@ using namespace std;
 
 void CCanvas::keyPressEvent(QKeyEvent *event) {
 //    std::cout << "Pressed " << event->key() << std::endl;
-    double delta = 0.5;
+    double delta = 10.0;
     switch(event->key()) {
     case Qt::Key_W:
         _camera.translate({0.0, 0.0, -delta});
@@ -70,8 +70,11 @@ void CCanvas::initializeGL()
     tau = 0;
     _x_wing.init();
     _vader_tie.init();
-    _terrain.generate(100);
+    _terrain.generate(300);
     _skybox.init();
+
+    _camera.setPosition(Point3d(1.0, 50.0, 30.0));
+    _camera.rotateY(-PI/4);
 }
 
 //-----------------------------------------------------------------------------
@@ -233,6 +236,15 @@ void CCanvas::paintGL()
     _skybox.draw();
     glPopMatrix();
 
+    GLfloat fogColor[4] = {0.85f,0.8f,0.69f,1.0f};
+
+    glFogi(GL_FOG_MODE, GL_LINEAR);
+    glFogfv(GL_FOG_COLOR, fogColor);
+    glFogf(GL_FOG_START, 2.0f);             // Fog Start Depth
+    glFogf(GL_FOG_END, 200.0f);               // Fog End Depth
+
+    glEnable(GL_FOG);
+
     // One light source
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -265,4 +277,5 @@ void CCanvas::paintGL()
 
     glDisable(GL_LIGHT0);
     glDisable(GL_LIGHTING);
+    glDisable(GL_FOG);
 }

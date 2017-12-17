@@ -69,6 +69,7 @@ void Model::_load(const std::string & path, const std::string & name)
   }
 
   std::string line;
+  //int g = 0;
   while (std::getline(file, line)) {
     std::stringstream stream(line);
     std::string field;
@@ -76,6 +77,11 @@ void Model::_load(const std::string & path, const std::string & name)
 
     // Component
     if (field == "g" || field == "o") {
+
+      //std::string name;
+      //stream >> name;
+      //std::cout << g++ << "\t" << name << std::endl;
+
       if (vertexIds.size() > 0) {
         _components.push_back(_makeComponent(vertexIds,    uvIds,   normalIds,
                                              vertices_all, uvs_all, normals_all,
@@ -211,8 +217,8 @@ double Model::_incline(double alpha, double beta)
 
 Point3d Model::_elipse_position(double time)
 {
-    constexpr double A = 12.0;
-    constexpr double B = 7.0;
+    constexpr double A = 50.0;
+    constexpr double B = 35.0;
     double x = sin(time * _s) * A;
     double y = 0.0;
     double z = cos(time * _s) * B;
