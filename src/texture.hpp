@@ -65,6 +65,39 @@ public:
         loaded = true;
     }
 
+    void setSkyboxTexture()
+    {
+        QImageReader reader(path.c_str());
+        QImage img;
+
+        const bool read = reader.read(&img);
+
+        if(!read) {
+            std::cout << "Failed to read: " << path.c_str() << " with message:" << reader.errorString().toStdString().c_str() << "; " << std::endl;
+            assert(read);
+            return;
+        }
+
+        assert(img.width() > 0.0);
+
+        img = QGLWidget::convertToGLFormat(img);
+
+        glGenTextures(1, &name);
+        glBindTexture(GL_TEXTURE_2D, name);
+
+        glGenerateMipmap(GL_TEXTURE_2D);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, img.width(), img.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, img.bits());
+
+        loaded = true;
+    }
+
     const std::string & get_path() { return path; }
 
 private:

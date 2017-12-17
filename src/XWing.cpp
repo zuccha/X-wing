@@ -133,7 +133,8 @@ void XWing::move(double time)
 
 
     if (time < 5.0) {
-      _o = Point3d(_o.x(), time, _o.z());
+//      _o = _elipse_position(5.0);
+      _o = Point3d(_o.x(), time * 4.0, _o.z());
       _p = _o;
       glPushMatrix();
       glTranslated(_p.x(), _p.y(), _p.z());

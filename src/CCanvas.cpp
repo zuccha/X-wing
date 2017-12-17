@@ -66,6 +66,9 @@ void CCanvas::initializeGL()
     _vader_tie.init();
     _terrain.generate(100);
     _skybox.init();
+
+    _camera.setPosition(Point3d(1.0, 50.0, 30.0));
+    _camera.rotateY(-PI/4);
 }
 
 //-----------------------------------------------------------------------------
@@ -237,7 +240,7 @@ void CCanvas::paintGL()
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  lightDiff);
 
     // You can always change the light position here if you want
-    GLfloat lightpos[] = {10.0f, -1000.0f, 10.0f, 0.0f};
+    GLfloat lightpos[] = {100.0f, 100.0f, 100.0f, 0.0f};
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     // Terrain

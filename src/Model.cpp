@@ -217,8 +217,8 @@ double Model::_incline(double alpha, double beta)
 
 Point3d Model::_elipse_position(double time)
 {
-    constexpr double A = 12.0;
-    constexpr double B = 7.0;
+    constexpr double A = 50.0;
+    constexpr double B = 35.0;
     double x = sin(time * _s) * A;
     double y = 0.0;
     double z = cos(time * _s) * B;
