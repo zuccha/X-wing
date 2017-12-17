@@ -5,6 +5,7 @@ XWing::XWing(const std::string & path, const std::string & name)
     : Model(path, name, Point3d(5.0, 20.0, -70.0), Point3d(), Point3d())
     , _is_take_off    (false)
     , _legs_offset    (0.0f)
+    , _front_leg      (1.0f)
     , _is_battle_mode (false)
     , _wings_degree   (0.0f)
 {
@@ -24,9 +25,13 @@ void XWing::draw()
 {
     // Handle take off legs offset
     if (_is_take_off) {
-      _legs_offset += 0.01f;
+      _legs_offset += 0.001f;
       if (_legs_offset > LEGS_MAX_OFFSET) {
           _legs_offset = LEGS_MAX_OFFSET;
+      }
+      _front_leg -= 0.005f;
+      if (_front_leg < 0) {
+          _front_leg = 0;
       }
     } else {
       _legs_offset -= 0.01f;
@@ -54,7 +59,7 @@ void XWing::draw()
     // Wing 1
     glPushMatrix();
     glRotatef(-_wings_degree, 0.0, 0.0, 1.0);
-    glTranslatef(-_wings_degree / 35.0f, 0.0f, 0.0f);
+    glTranslatef(-_wings_degree / 512.0f, 0.0f, 0.0f);
     _components[3].draw();  // LASER0
     _components[27].draw(); // HULL_SIDE5
     _components[10].draw(); // HULL_SIDE2
@@ -72,7 +77,7 @@ void XWing::draw()
     // Wing 2
     glPushMatrix();
     glRotatef(_wings_degree, 0.0, 0.0, 1.0);
-    glTranslatef(_wings_degree / 35.0f, 0.0f, 0.0f);
+    glTranslatef(_wings_degree / 512.0f, 0.0f, 0.0f);
     _components[23].draw(); // BLACK_MATTE0
     _components[7].draw();  // HULL_SIDE3
     _components[28].draw(); // INTAKE0
@@ -100,12 +105,13 @@ void XWing::draw()
 
     // Front-leg
     // Font-leg shutter left
-    _components[15].draw(); // HULL_BOTTOM0
+    //_components[15].draw(); // HULL_BOTTOM0
     // Font-leg shutter right
-    _components[19].draw(); // HULL_BOTTOM1
+    //_components[19].draw(); // HULL_BOTTOM1
     // Leg
     glPushMatrix();
-    glTranslatef(0.0f, _legs_offset, 0.0f);
+    glScalef(_front_leg, _front_leg, _front_leg);
+    glTranslatef(0.0f, _legs_offset, 1.0 / _front_leg);
     _components[12].draw(); // HULL_SIDE7
     glPopMatrix();
 

@@ -21,6 +21,7 @@ public:
 private:
     bool  _is_take_off;
     float _legs_offset;
+    float _front_leg;
     static constexpr float LEGS_MAX_OFFSET = 1.0f;
 
     bool  _is_battle_mode;

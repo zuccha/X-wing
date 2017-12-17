@@ -92,7 +92,7 @@ void CCanvas::initializeGL()
     _skybox.init();
 
     _camera.setPosition(Point3d(1.0, 50.0, 30.0));
-//    _camera.rotateY(-PI/4);
+    _camera.rotateY(-PI/4);
 }
 
 //-----------------------------------------------------------------------------
