@@ -21,7 +21,7 @@ private:
     std::vector<Point3d>    _normals;
     std::vector<Point2d>    _uvs;
 
-    Texture _texture;
+    std::vector<Texture> _textures;
 
 };
 
