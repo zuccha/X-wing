@@ -126,12 +126,12 @@ void XWing::move(double time)
       if (!_s_stable) {
         if (_s_decrease) {
           _s -= 0.0001;
-          if (_s < 0.02) {
+          if (_s < 0.035) {
             _s_stable = true;
-            _s = 0.02;
+            _s = 0.035;
           }
-        } else if (_s < 0.038) {
-          _s += 0.0001;
+        } else if (_s < 0.06) {
+          _s += 0.0002;
         } else {
           _s_decrease = true;
         }

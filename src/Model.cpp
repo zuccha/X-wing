@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 #include "Base.h"
+#include "Tie.h"
 
 Model::Model(const std::string & path, const std::string & name,
              const Point3d & o, const Point3d & p, const Point3d & d)
@@ -185,10 +186,14 @@ void Model::_move_elipse(double time)
     Point3d p = _p;
 
     _p = _o + _elipse_position(_t);
+    double k = 0.0;
+    if (dynamic_cast<Tie *>(this)) {
+      k = 2.0 / time;
+    }
     _d = p - _p;
 
     glPushMatrix();
-    glTranslated(_p.x(), _p.y(), _p.z());
+    glTranslated(_p.x() + k, _p.y(), _p.z() + k);
 
     double alpha_old = _alpha;
     _alpha      = _rotation(-_d.z(), -_d.x());
@@ -218,17 +223,17 @@ double Model::_incline(double alpha, double beta)
 
 Point3d Model::_elipse_position(double time)
 {
-    constexpr double A = 50.0;
-    constexpr double B = 35.0;
-    double x = sin(time) * A;
-    double y = 0.0;
-    double z = cos(time) * B;
-    return Point3d(x, y, z);
-
 //    constexpr double A = 50.0;
-//    constexpr double B = 75.0;
-//    double x = sin(time * _s) * A + cos(time*8 * _s)*0.20;
-//    double y = sin(time*8 * _s)*0.25;
-//    double z = cos(time/2 * _s) * B + sin(time*5 * _s)*0.2;
+//    constexpr double B = 35.0;
+//    double x = sin(time) * A;
+//    double y = 0.0;
+//    double z = cos(time) * B;
 //    return Point3d(x, y, z);
+
+    constexpr double A = 50.0;
+    constexpr double B = 75.0;
+    double x = sin(time) * A + cos(time*8)*0.20;
+    double y = sin(time*8)*0.25;
+    double z = cos(time/2) * B + sin(time*5)*0.2;
+    return Point3d(x, y, z);
 }

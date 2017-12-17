@@ -7,8 +7,8 @@ Tie::Tie(const std::string & path, const std::string & name)
     : Model         (path, name, Point3d(5.0, 20.0, -20.0), Point3d(), Point3d())
     , _is_exploding (false)
 {
-    _t = PI;
-    _s = 0.02;
+    _t = 0.0;
+    _s = 0.035;
     for (unsigned int i = 0; i < _components.size(); ++i) {
         double x = ((rand() % 300) - 150) / 10.0;
         double y = ((rand() % 300) - 150) / 10.0;
