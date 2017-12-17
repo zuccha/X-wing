@@ -186,21 +186,17 @@ void Model::_move_elipse(double time)
     Point3d p = _p;
 
     _p = _o + _elipse_position(_t);
-    double k = 0.0;
-    if (dynamic_cast<Tie *>(this)) {
-      k = 2.0 / time;
-    }
     _d = p - _p;
 
     glPushMatrix();
-    glTranslated(_p.x() + k, _p.y(), _p.z() + k);
+    glTranslated(_p.x(), _p.y(), _p.z());
 
     double alpha_old = _alpha;
-    _alpha      = _rotation(-_d.z(), -_d.x());
-    double beta = _incline(_alpha, alpha_old);
+    _alpha = _rotation(-_d.z(), -_d.x());
+    _beta  = _incline(_alpha, alpha_old);
 
     glRotated(_alpha, 0, 1, 0); // Movement direction
-    glRotated(beta,   0, 0, 1); // Curvature
+    glRotated(_beta,  0, 0, 1); // Curvature
 
     this->draw();
 
@@ -217,23 +213,22 @@ double Model::_rotation(double x, double y)
 
 double Model::_incline(double alpha, double beta)
 {
-    double gamma = abs(alpha - beta) * -36.8;
-    return -90.0 <= gamma ? gamma : -90.0;
+    double gamma = (alpha - beta) * -16.8;
+    if (gamma < -90.0) {
+        return -90.0;
+    }
+    if (gamma >= 90.0) {
+        return 90.0;
+    }
+    return gamma;
 }
 
 Point3d Model::_elipse_position(double time)
 {
-//    constexpr double A = 50.0;
-//    constexpr double B = 35.0;
-//    double x = sin(time) * A;
-//    double y = 0.0;
-//    double z = cos(time) * B;
-//    return Point3d(x, y, z);
-
     constexpr double A = 50.0;
     constexpr double B = 75.0;
-    double x = sin(time) * A + cos(time*8)*0.20;
-    double y = sin(time*8)*0.25;
-    double z = cos(time/2) * B + sin(time*5)*0.2;
+    double x = sin(time) * A + cos(time*8) * 0.20;
+    double y = 0;//sin(time*8)*0.25;
+    double z = cos(time/2) * B + sin(time*5) * 0.2;
     return Point3d(x, y, z);
 }

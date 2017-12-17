@@ -78,6 +78,7 @@ private:
     void setView(View _view);
 
     Camera _camera;
+    Camera _cockpit;
 
     // Models and textures
     Terrain _terrain;

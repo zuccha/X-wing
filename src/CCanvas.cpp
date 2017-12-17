@@ -195,26 +195,34 @@ void CCanvas::resizeGL(int width, int height)
 //-----------------------------------------------------------------------------
 
 void CCanvas::setView(View _view) {
-    Point3d pos = _camera.getPosition();
-    double pitch = _camera.getPitch();
-    double yaw = _camera.getYaw();
-    double roll = _camera.getRoll();
-    Point3d target = {sin(yaw), sin(pitch), -cos(yaw)};
-    target += pos;
+    Point3d pos;
+    double pitch;
+    double yaw;
+    double roll;
 
     Point3d up = {sin(roll), cos(roll), 0.0};
 
     switch(_view) {
     case Perspective:
-        lookAt(pos.x(), pos.y(), pos.z(),
-               target.x(), target.y(), target.z(),
-               up.x(), up.y(), up.z());
+        pos = _camera.getPosition();
+        pitch = _camera.getPitch();
+        yaw = _camera.getYaw();
+        roll = _camera.getRoll();
         break;
 
     case Cockpit:
-        // Maybe you want to have an option to view the scene from the train cockpit, up to you
+        pos = _cockpit.getPosition();
+        pitch = _cockpit.getPitch();
+        yaw = _cockpit.getYaw();
+        roll = _cockpit.getRoll();
         break;
     }
+
+    Point3d target = {sin(yaw), sin(pitch), -cos(yaw)};
+    target += pos;
+    lookAt(pos.x(), pos.y(), pos.z(),
+           target.x(), target.y(), target.z(),
+           up.x(), up.y(), up.z());
 }
 
 void CCanvas::paintGL()
@@ -229,7 +237,7 @@ void CCanvas::paintGL()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Setup the current view
-    setView(View::Perspective);
+    setView(View::Cockpit);
 
     //Skybox (not lit)
     glPushMatrix();
@@ -241,7 +249,7 @@ void CCanvas::paintGL()
     glFogi(GL_FOG_MODE, GL_LINEAR);
     glFogfv(GL_FOG_COLOR, fogColor);
     glFogf(GL_FOG_START, 2.0f);             // Fog Start Depth
-    glFogf(GL_FOG_END, 200.0f);               // Fog End Depth
+    glFogf(GL_FOG_END, 200.0f);             // Fog End Depth
 
     glEnable(GL_FOG);
 
@@ -267,11 +275,15 @@ void CCanvas::paintGL()
     glPopMatrix();
 
     // X-wing
-    //
+    _x_wing.move(double(tau));
 
     // Vader tie fighter
     _vader_tie.move(double(tau));
-    _x_wing.move(double(tau));
+
+    // Cockpit camera
+    _cockpit.setYaw(-_x_wing.alpha() + PI);
+    _cockpit.setRoll(_x_wing.beta());
+    _cockpit.setPosition(_x_wing.p() + Point3d(0.0, 0.5, 0.0));
 
     tau += 0.02f;
 

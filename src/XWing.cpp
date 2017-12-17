@@ -119,7 +119,8 @@ void XWing::move(double time)
       _p = Point3d(_p.x() + _o.x(), time * 4.0, _p.z() + _o.z());
       glPushMatrix();
       glTranslated(_p.x(), _p.y(), _p.z());
-      glRotated(18.0 * time, 0.0, 1.0, 0.0);
+      _alpha = 18.0 * time;
+      glRotated(_alpha, 0.0, 1.0, 0.0);
       this->draw();
       glPopMatrix();
     } else {

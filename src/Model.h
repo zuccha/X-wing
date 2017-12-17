@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "Point3.h"
+#include "Base.h"
 #include "Component.h"
 
 class Model
@@ -15,6 +15,12 @@ public:
   virtual void init();
   virtual void draw();
   virtual void move(double time);
+
+  const Point3d & p() { return _p; }
+  const Point3d & d() { return _d; }
+
+  double alpha() { return _alpha * PI / 180.0; }
+  double beta() { return _beta * PI / 180.0; }
 
 protected:
   double _rotation(double x, double y);
@@ -32,6 +38,7 @@ protected:
   double  _a; // Accelleration
   double  _t;
   double _alpha;
+  double _beta;
 
 private:
   void _load(const std::string & path, const std::string & name);
