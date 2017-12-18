@@ -69,6 +69,7 @@ void Projectile::draw()
       glVertex3d(face[3].x(), face[3].y(), face[3].z());
       glEnd();
     }
+//    glDisable(GL_COLOR_MATERIAL);
 }
 
 void Projectile::move(double time)

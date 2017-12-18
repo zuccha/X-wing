@@ -52,6 +52,7 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         if (_x_wing.is_battle_mode()) {
           const Point3d p = _x_wing.p();
           double angle = _x_wing.alpha() * 180 / PI;
+          double rad = _x_wing.alpha();
           double x = 1.8;
           double y = 0.45;
           double z = 0.0;
@@ -316,6 +317,9 @@ void CCanvas::paintGL()
     _cockpit.setRoll(_x_wing.beta());
     _cockpit.setPosition(_x_wing.p() + Point3d(-5.5*sin(_cockpit.getYaw()), 1.5, 5.5*cos(_cockpit.getYaw())));
 
+    glDisable(GL_LIGHT0);
+    glDisable(GL_LIGHTING);
+
     // Projectiles
     for (Projectile & projectile : _projectiles) {
       projectile.move(tau);
@@ -342,8 +346,5 @@ void CCanvas::paintGL()
     }
 
     tau += 0.02f;
-
-    glDisable(GL_LIGHT0);
-    glDisable(GL_LIGHTING);
     glDisable(GL_FOG);
 }
