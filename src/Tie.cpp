@@ -5,7 +5,6 @@
 
 Tie::Tie(const std::string & path, const std::string & name)
     : Model         (path, name, Point3d(5.0, 20.0, -70.0), Point3d(), Point3d())
-    , _is_exploding (false)
 {
     _t = -3 * PI / 4;
     _s = 0.035;
@@ -32,17 +31,7 @@ void Tie::move(double time)
   if (!_is_exploding) {
     Model::move(time);
   } else {
-    static double d = 0.0;
-    for (unsigned int i = 0; i < _components.size(); ++i) {
-      glPushMatrix();
-      Point3d & e = _explosion[i];
-      glTranslated(_p.x() + d * e.x(),
-                   _p.y() + d * e.y(),
-                   _p.z() + d * e.z());
-      _components[i].draw();
-      glPopMatrix();
-    }
-    d += 0.02;
+    explode();
   }
   _t += _s;
 }

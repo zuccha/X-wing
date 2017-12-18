@@ -1,12 +1,14 @@
 #include "Projectile.h"
 #include <QtOpenGL>
 
-Projectile::Projectile(const Point3d & p, const Point3d & o,
-                       double alpha, double beta)
-    : _p(p)
+Projectile::Projectile(Model * model, const Point3d & p, const Point3d & o,
+                       double alpha, double beta, const Point3d & color)
+    : _model(model)
+    , _p(p)
     , _o(o)
     , _alpha(alpha)
     , _beta(beta)
+    , _color(color)
 {     
     _d = Point3d(sin(_alpha  * PI / 180.0), 0, cos(_alpha  * PI / 180.0));
     init();
@@ -46,7 +48,7 @@ void Projectile::draw()
 {
     // Draw bottom
     glBegin(GL_TRIANGLE_FAN);
-    glColor3d(1.0,  0.0, 0.0);
+    glColor3d(_color.x(), _color.y(), _color.z());
     for (unsigned int i = 0; i < _bottom.size(); ++i) {
       glVertex3d(_bottom[i].x(), _bottom[i].y(), _bottom[i].z());
     }
@@ -54,7 +56,7 @@ void Projectile::draw()
 
     // Draw top
     glBegin(GL_TRIANGLE_FAN);
-    glColor3d(1.0,  0.0, 0.0);
+    glColor3d(_color.x(), _color.y(), _color.z());
     for (unsigned int i = 1; i < _top.size(); ++i) {
       glVertex3d(_top[i].x(), _top[i].y(), _top[i].z());
     }
@@ -63,7 +65,7 @@ void Projectile::draw()
     // Draw faces
     for (unsigned int i = 0; i < _faces.size(); ++i) {
       glBegin(GL_TRIANGLE_STRIP);
-      glColor3d(1.0,  0.0, 0.0);
+      glColor3d(_color.x(), _color.y(), _color.z());
       PointArray & face = _faces[i];
       glVertex3d(face[0].x(), face[0].y(), face[0].z());
       glVertex3d(face[1].x(), face[1].y(), face[1].z());

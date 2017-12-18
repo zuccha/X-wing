@@ -13,12 +13,20 @@ Model::Model(const std::string & path, const std::string & name,
     , _s(0.0)
     , _a(0.0)
     , _t(0.0)
+    , _e(0.0)
     , _alpha(0.0)
     , _beta(0.0)
     , _gamma_prev(0.0)
     , _first_move(true)
+    , _is_exploding(false)
 {
   _load(path, name);
+  for (unsigned int i = 0; i < _components.size(); ++i) {
+      double x = ((rand() % 300) - 150) / 10.0;
+      double y = ((rand() % 300) - 150) / 10.0;
+      double z = ((rand() % 300) - 150) / 10.0;
+      _explosion.push_back(Point3d(x, y, z));
+  }
 }
 
 Component Model::_makeComponent(const std::vector<int>     & vertexIds,
@@ -257,4 +265,18 @@ void Model::speed(double n)
   if (0.0 <= _s + n && _s + n < 0.06) {
     _s += n;
   }
+}
+
+void Model::explode()
+{
+    for (unsigned int i = 0; i < _components.size(); ++i) {
+      glPushMatrix();
+      Point3d & p = _explosion[i];
+      glTranslated(_p.x() + _e * p.x(),
+                   _p.y() + _e * p.y(),
+                   _p.z() + _e * p.z());
+      _components[i].draw();
+      glPopMatrix();
+    }
+    _e += 0.02;
 }

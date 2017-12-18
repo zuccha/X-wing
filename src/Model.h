@@ -26,12 +26,17 @@ public:
 
   void speed(double n);
 
+  bool is_exploding() { return _is_exploding; }
+  void is_exploding(bool is_exploding) { _is_exploding = is_exploding; }
+
 protected:
   double _rotation(double x, double y);
   double _incline(double alpha, double beta);
 
   Point3d _elipse_position(double time);
   void _move_elipse(double time);
+
+  void explode();
 
   std::vector<Component> _components;
 
@@ -40,11 +45,15 @@ protected:
   Point3d _d; // Direction
   double  _s; // Speed
   double  _a; // Accelleration
-  double  _t;
+  double  _t; // Time (tau)
+  double  _e; // Explosion time
   double _alpha;
   double _beta;
   double _gamma_prev;
   bool   _first_move;
+
+  bool _is_exploding;
+  std::vector<Point3d> _explosion;
 
 private:
   void _load(const std::string & path, const std::string & name);

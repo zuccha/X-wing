@@ -120,30 +120,34 @@ void XWing::draw()
 
 void XWing::move(double time)
 {
-    if (time < 5.0) {
-      _p = _elipse_position(0.0);
-      _p = Point3d(_p.x() + _o.x(), time * 4.0, _p.z() + _o.z());
-      glPushMatrix();
-      glTranslated(_p.x(), _p.y(), _p.z());
-      _alpha = 18.0 * time;
-      glRotated(_alpha, 0.0, 1.0, 0.0);
-      this->draw();
-      glPopMatrix();
-    } else {
-      Model::move(time);
-      if (!_s_stable) {
-        if (_s_decrease) {
-          _s -= 0.0001;
-          if (_s < 0.035) {
-            _s_stable = true;
-            _s = 0.035;
-          }
-        } else if (_s < 0.06) {
-          _s += 0.00015;
+    if (!_is_exploding) {
+        if (time < 5.0) {
+          _p = _elipse_position(0.0);
+          _p = Point3d(_p.x() + _o.x(), time * 4.0, _p.z() + _o.z());
+          glPushMatrix();
+          glTranslated(_p.x(), _p.y(), _p.z());
+          _alpha = 18.0 * time;
+          glRotated(_alpha, 0.0, 1.0, 0.0);
+          this->draw();
+          glPopMatrix();
         } else {
-          _s_decrease = true;
+          Model::move(time);
+          if (!_s_stable) {
+            if (_s_decrease) {
+              _s -= 0.0001;
+              if (_s < 0.035) {
+                _s_stable = true;
+                _s = 0.035;
+              }
+            } else if (_s < 0.06) {
+              _s += 0.00015;
+            } else {
+              _s_decrease = true;
+            }
+          }
+          _t += _s;
         }
-      }
-      _t += _s;
+    } else {
+        explode();
     }
 }

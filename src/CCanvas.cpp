@@ -65,29 +65,50 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         _camera.rotateY(-0.05);
         break;
     case Qt::Key_P:
-        if (_x_wing.is_battle_mode()) {
-          const Point3d p = _x_wing.p();
-          double alpha = _x_wing.alpha() * 180 / PI;
-          double beta  = _x_wing.beta() * 180 / PI;
-          double rad = _x_wing.alpha();
-          double k = 1.8;
-          double x = 1.8;
-          double y = 0.45;
-          double z = -1.0;
-          _projectiles.push_back(Projectile(p, Point3d( x,  y,  z), alpha, beta));
-          _projectiles.push_back(Projectile(p, Point3d(-x,  y,  z), alpha, beta));
-          _projectiles.push_back(Projectile(p, Point3d( x, -y,  z), alpha, beta));
-          _projectiles.push_back(Projectile(p, Point3d(-x, -y,  z), alpha, beta));
+        if (_current_view != Perspective) {
+          if (_tieView) {
+            const Point3d p = _vader_tie.p();
+            double alpha = _vader_tie.alpha() * 180 / PI;
+            double beta  = _vader_tie.beta() * 180 / PI;
+            double x = 0.2;
+            double y = 0.45;
+            double z = -1.0;
+            _projectiles.push_back(Projectile(&_vader_tie, p, Point3d( x,  y,  z), alpha, beta, Point3d(0, 1, 0)));
+            _projectiles.push_back(Projectile(&_vader_tie, p, Point3d(-x,  y,  z), alpha, beta, Point3d(0, 1, 0)));
+          } else if (_x_wing.is_battle_mode()) {
+            const Point3d p = _x_wing.p();
+            double alpha = _x_wing.alpha() * 180 / PI;
+            double beta  = _x_wing.beta() * 180 / PI;
+            double x = 1.8;
+            double y = 0.45;
+            double z = -1.0;
+            _projectiles.push_back(Projectile(&_x_wing, p, Point3d( x,  y,  z), alpha, beta, Point3d(1, 0, 0)));
+            _projectiles.push_back(Projectile(&_x_wing, p, Point3d(-x,  y,  z), alpha, beta, Point3d(1, 0, 0)));
+            _projectiles.push_back(Projectile(&_x_wing, p, Point3d( x, -y,  z), alpha, beta, Point3d(1, 0, 0)));
+            _projectiles.push_back(Projectile(&_x_wing, p, Point3d(-x, -y,  z), alpha, beta, Point3d(1, 0, 0)));
+          }
         }
         break;
     case Qt::Key_N:
-        if (_x_wing.is_stable()) {
-          _x_wing.speed(0.0005);
+        if (_current_view != Perspective) {
+          if (_tieView) {
+            _vader_tie.speed(0.0005);
+          } else {
+            if (_x_wing.is_stable()) {
+              _x_wing.speed(0.0005);
+            }
+          }
         }
         break;
     case Qt::Key_M:
-        if (_x_wing.is_stable()) {
-          _x_wing.speed(-0.0005);
+        if (_current_view != Perspective) {
+          if (_tieView) {
+            _vader_tie.speed(-0.0005);
+          } else {
+            if (_x_wing.is_stable()) {
+              _x_wing.speed(-0.0005);
+            }
+          }
         }
         break;
     case Qt::Key_C:
@@ -357,16 +378,25 @@ void CCanvas::paintGL()
     // Check if projectile destroies tie
     if (!_vader_tie.is_exploding()) {
       for (Projectile & projectile : _projectiles) {
-        double d = (projectile.p() - _vader_tie.p()).norm();
-        if (d < 15.0) {
-          _vader_tie.explode(true);
+        if (projectile.model() == &_x_wing) {
+          double d1 = (projectile.p() - _vader_tie.p()).norm();
+          if (d1 < 15.0) {
+            _vader_tie.is_exploding(true);
+          }
+        } else {
+          double d2 = (projectile.p() - _x_wing.p()).norm();
+          if (d2 < 15.0) {
+            _x_wing.is_exploding(true);
+          }
         }
       }
     }
 
     // Check if x-wing collides with tie
-    if ((_x_wing.p() - _vader_tie.p()).norm() < 5.0) {
-        _vader_tie.explode(true);
+    if ((_x_wing.p() - _vader_tie.p()).norm() < 5.0 &&
+            !_vader_tie.is_exploding() && !_x_wing.is_exploding()) {
+        _vader_tie.is_exploding(true);
+        _x_wing.is_exploding(true);
     }
 
     // Remove old projectiles
