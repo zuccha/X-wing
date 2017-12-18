@@ -14,6 +14,7 @@ Model::Model(const std::string & path, const std::string & name,
     , _a(0.0)
     , _t(0.0)
     , _alpha(0.0)
+    , _gamma_prev(0.0)
 {
   _load(path, name);
 }
@@ -213,12 +214,18 @@ double Model::_rotation(double x, double y)
 
 double Model::_incline(double alpha, double beta)
 {
-    double gamma = (alpha - beta) * -16.8;
-    if (gamma < -90.0) {
-        return -89.0;
+    constexpr double LIMIT = 90.0;
+    double a = alpha - beta;
+    double gamma = _gamma_prev;
+    if (abs(a) < 10.0) {
+      gamma = a * -10.8;
     }
-    if (gamma >= 90.0) {
-        return 89.0;
+    _gamma_prev = gamma;
+    if (gamma < -LIMIT) {
+        return -(LIMIT - 1.0);
+    }
+    if (gamma >= LIMIT) {
+        return LIMIT - 1.0;
     }
     return gamma;
 }

@@ -43,6 +43,7 @@ protected:
   double  _t;
   double _alpha;
   double _beta;
+  double _gamma_prev;
 
 private:
   void _load(const std::string & path, const std::string & name);
