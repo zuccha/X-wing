@@ -215,10 +215,10 @@ double Model::_incline(double alpha, double beta)
 {
     double gamma = (alpha - beta) * -16.8;
     if (gamma < -90.0) {
-        return -90.0;
+        return -89.0;
     }
     if (gamma >= 90.0) {
-        return 90.0;
+        return 89.0;
     }
     return gamma;
 }
