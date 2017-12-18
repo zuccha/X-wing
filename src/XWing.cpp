@@ -133,16 +133,10 @@ void XWing::move(double time)
         } else {
           Model::move(time);
           if (!_s_stable) {
-            if (_s_decrease) {
-              _s -= 0.0001;
-              if (_s < 0.035) {
-                _s_stable = true;
-                _s = 0.035;
-              }
-            } else if (_s < 0.06) {
-              _s += 0.00015;
-            } else {
-              _s_decrease = true;
+            _s += 0.0002;
+            if (_s >= 0.035) {
+              _s = 0.035;
+              _s_stable = true;
             }
           }
           _t += _s;
