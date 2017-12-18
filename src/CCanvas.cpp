@@ -72,10 +72,10 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
           double k = 1.8;
           double x = k*cos(rad);
           double y = 0.45;
-          double z = -k*sin(rad);
-          _projectiles.push_back(Projectile(p + Point3d(x, y, z), angle));
-          _projectiles.push_back(Projectile(p + Point3d(-x, y, -z), angle));
-          _projectiles.push_back(Projectile(p + Point3d(x, -y, z), angle));
+          double z = 1.0 + -k*sin(rad);
+          _projectiles.push_back(Projectile(p + Point3d( x,  y,  z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(-x,  y, -z), angle));
+          _projectiles.push_back(Projectile(p + Point3d( x, -y,  z), angle));
           _projectiles.push_back(Projectile(p + Point3d(-x, -y, -z), angle));
         }
         break;

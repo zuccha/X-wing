@@ -42,7 +42,7 @@ void Tie::move(double time)
       _components[i].draw();
       glPopMatrix();
     }
-    d += 0.01;
+    d += 0.02;
   }
   _t += _s;
 }
