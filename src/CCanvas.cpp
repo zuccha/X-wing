@@ -12,8 +12,9 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
 //    std::cout << "Position " << _camera.getPosition();
 //    std::cout << "Pitch " << _camera.getPitch() << std::endl;
 //    std::cout << "Yaw " << _camera.getYaw() << std::endl;
-
-    double delta = 10.0;
+    double yaw = _camera.getYaw();
+    double pitch = _camera.getPitch();
+    double delta = 2.0;
     switch(event->key()) {
     case Qt::Key_1: // take-off camera
         _camera.setPosition({11.0, 2.0, 10.0});
@@ -28,16 +29,16 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         break;
 //        _current_view = View::Perspective;
     case Qt::Key_W:
-        _camera.translate({0.0, 0.0, -delta});
+        _camera.translate({sin(yaw)*delta, sin(pitch)*delta, -cos(yaw)*delta});
         break;
     case Qt::Key_A:
-        _camera.translate({-delta, 0.0, 0.0});
+        _camera.translate({sin(yaw-PI/2)*delta, 0, -cos(yaw-PI/2)*delta});
         break;
     case Qt::Key_S:
-        _camera.translate({0.0, 0.0, delta});
+        _camera.translate({sin(yaw)*-delta, sin(pitch)*-delta, -cos(yaw)*-delta});
         break;
     case Qt::Key_D:
-        _camera.translate({delta, 0.0, 0.0});
+        _camera.translate({sin(yaw+PI/2)*delta, 0, -cos(yaw+PI/2)*delta});
         break;
     case Qt::Key_Q:
         _camera.rotateZ(0.05);
@@ -249,7 +250,7 @@ void CCanvas::setView(View _view) {
     Point3d pos;
     double pitch;
     double yaw;
-    double roll;
+    double roll = 0;
 
     Point3d up = {sin(roll), cos(roll), 0.0};
 
