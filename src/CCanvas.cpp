@@ -53,13 +53,14 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
           const Point3d p = _x_wing.p();
           double angle = _x_wing.alpha() * 180 / PI;
           double rad = _x_wing.alpha();
-          double x = 1.8;
+          double k = 1.8;
+          double x = k*cos(rad);
           double y = 0.45;
-          double z = 0.0;
+          double z = -k*sin(rad);
           _projectiles.push_back(Projectile(p + Point3d(x, y, z), angle));
-          _projectiles.push_back(Projectile(p + Point3d(-x, y, z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(-x, y, -z), angle));
           _projectiles.push_back(Projectile(p + Point3d(x, -y, z), angle));
-          _projectiles.push_back(Projectile(p + Point3d(-x, -y, z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(-x, -y, -z), angle));
         }
         break;
     case Qt::Key_N:

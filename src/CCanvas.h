@@ -37,7 +37,8 @@ public:
         _x_wing   ("./media/models/x-wing/", "x-wing.obj"),
         _vader_tie("./media/models/vader-tie/", "vader-tie.obj"),
         _skybox(),
-        _current_view(View::Cockpit)
+        _current_view(View::Cockpit),
+        _tieView(false)
     {
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateGL()));
