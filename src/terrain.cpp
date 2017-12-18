@@ -2,7 +2,7 @@
 #include <QtOpenGL>
 
 Terrain::Terrain():
-    _noiseGen(100),
+    _noiseGen(1252423),
     _texture("./media/models/sand4.jpg")
 {}
 

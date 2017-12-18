@@ -83,6 +83,7 @@ private:
     Camera _camera;
     Camera _cockpit;
     View _current_view;
+    bool _tieView;
 
     // Models and textures
     Terrain _terrain;

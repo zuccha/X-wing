@@ -76,6 +76,9 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         if (_current_view == View::Perspective) _current_view = View::Cockpit;
         else _current_view = View::Perspective;
         break;
+    case Qt::Key_T:
+        _tieView = !_tieView;
+        break;
     }
 }
 
@@ -313,9 +316,15 @@ void CCanvas::paintGL()
     _vader_tie.move(double(tau));
 
     // Cockpit camera
-    _cockpit.setYaw(-_x_wing.alpha() + PI);
-    _cockpit.setRoll(_x_wing.beta());
-    _cockpit.setPosition(_x_wing.p() + Point3d(-5.5*sin(_cockpit.getYaw()), 1.5, 5.5*cos(_cockpit.getYaw())));
+    Model* selected_ship = nullptr;
+    if (_tieView) {
+        selected_ship = &_vader_tie;
+    } else {
+        selected_ship = &_x_wing;
+    }
+    _cockpit.setYaw(-selected_ship->alpha() + PI);
+    _cockpit.setRoll(selected_ship->beta());
+    _cockpit.setPosition(selected_ship->p() + Point3d(-5.5*sin(_cockpit.getYaw()), 1.5, 5.5*cos(_cockpit.getYaw())));
 
     glDisable(GL_LIGHT0);
     glDisable(GL_LIGHTING);
