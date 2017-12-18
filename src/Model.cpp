@@ -228,7 +228,7 @@ Point3d Model::_elipse_position(double time)
     constexpr double A = 50.0;
     constexpr double B = 75.0;
     double x = sin(time) * A + cos(time*8) * 0.20;
-    double y = 0;//sin(time*8)*0.25;
+    double y = sin(time*3)*0.5;
     double z = cos(time/2) * B + sin(time*5) * 0.2;
     return Point3d(x, y, z);
 }
