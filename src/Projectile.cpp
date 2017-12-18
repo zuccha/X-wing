@@ -1,11 +1,14 @@
 #include "Projectile.h"
 #include <QtOpenGL>
 
-Projectile::Projectile(const Point3d & p, double angle)
+Projectile::Projectile(const Point3d & p, const Point3d & o,
+                       double alpha, double beta)
     : _p(p)
-    , _angle(angle)
-{
-    _d = Point3d(sin(_angle  * PI / 180.0), 0, cos(_angle  * PI / 180.0));
+    , _o(o)
+    , _alpha(alpha)
+    , _beta(beta)
+{     
+    _d = Point3d(sin(_alpha  * PI / 180.0), 0, cos(_alpha  * PI / 180.0));
     init();
 }
 
@@ -72,12 +75,14 @@ void Projectile::draw()
 //    glDisable(GL_COLOR_MATERIAL);
 }
 
-void Projectile::move(double time)
+void Projectile::move(double time, double angle)
 {
     glPushMatrix();
     _p = _p + _d * _t;
     glTranslated(_p.x(), _p.y(), _p.z());
-    glRotated(_angle, 0, 1, 0);
+    glRotated(_alpha, 0, 1, 0);
+    glRotated(_beta, 0, 0, 1);
+    glTranslated(_o.x(), _o.y(), _o.z() + 5.5 * cos(angle));
     glScaled(0.05, 0.05, 0.05);
     this->draw();
     glPopMatrix();
