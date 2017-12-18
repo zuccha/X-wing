@@ -279,7 +279,7 @@ void CCanvas::paintGL()
     glFogi(GL_FOG_MODE, GL_LINEAR);
     glFogfv(GL_FOG_COLOR, fogColor);
     glFogf(GL_FOG_START, 2.0f);             // Fog Start Depth
-    glFogf(GL_FOG_END, 200.0f);             // Fog End Depth
+    glFogf(GL_FOG_END, 220.0f);             // Fog End Depth
 
     glEnable(GL_FOG);
 
