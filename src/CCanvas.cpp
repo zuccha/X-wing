@@ -9,25 +9,15 @@ using namespace std;
 
 
 void CCanvas::keyPressEvent(QKeyEvent *event) {
-//    std::cout << "Position " << _camera.getPosition();
-//    std::cout << "Pitch " << _camera.getPitch() << std::endl;
-//    std::cout << "Yaw " << _camera.getYaw() << std::endl;
     double yaw = _camera.getYaw();
     double pitch = _camera.getPitch();
     double delta = 2.0;
     switch(event->key()) {
-    case Qt::Key_1: // take-off camera
-        _camera.setPosition({11.0, 2.0, 10.0});
-        _camera.setPitch(-0.65);
-        _camera.setYaw(-0.5);
-        break;
-//        _current_view = View::Perspective;
-    case Qt::Key_2: // overview camera
+    case Qt::Key_1: // overview camera
         _camera.setPosition({-19.0, 50.0, 30.0});
         _camera.setPitch(-0.5);
         _camera.setYaw(0.45);
         break;
-//        _current_view = View::Perspective;
     case Qt::Key_W:
         _camera.translate({sin(yaw)*delta, sin(pitch)*delta, -cos(yaw)*delta});
         break;
@@ -41,15 +31,9 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         _camera.translate({sin(yaw+PI/2)*delta, 0, -cos(yaw+PI/2)*delta});
         break;
     case Qt::Key_Q:
-        _camera.rotateZ(0.05);
-        break;
-    case Qt::Key_E:
-        _camera.rotateZ(-0.05);
-        break;
-    case Qt::Key_Shift:
         _camera.translate({0.0, delta, 0.0});
         break;
-    case Qt::Key_Control:
+    case Qt::Key_E:
         _camera.translate({0.0, -delta, 0.0});
         break;
     case Qt::Key_Left:
@@ -64,7 +48,7 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_Down:
         _camera.rotateY(-0.05);
         break;
-    case Qt::Key_P:
+    case Qt::Key_Space:
         if (_current_view == View::Cockpit) {
           if (_tieView) {
             const Point3d p = _vader_tie.p();
