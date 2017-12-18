@@ -36,7 +36,8 @@ public:
 //        _x_wing   ("./media/models/", "train.obj")
         _x_wing   ("./media/models/x-wing/", "x-wing.obj"),
         _vader_tie("./media/models/vader-tie/", "vader-tie.obj"),
-        _skybox(Skybox())
+        _skybox(),
+        _current_view(View::Perspective)
     {
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -81,6 +82,7 @@ private:
 
     Camera _camera;
     Camera _cockpit;
+    View _current_view;
 
     // Models and textures
     Terrain _terrain;

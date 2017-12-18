@@ -71,6 +71,10 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
           _x_wing.speed(-0.0005);
         }
         break;
+    case Qt::Key_C:
+        if (_current_view == View::Perspective) _current_view = View::Cockpit;
+        else _current_view = View::Perspective;
+        break;
     }
 }
 
@@ -262,7 +266,7 @@ void CCanvas::paintGL()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Setup the current view
-    setView(View::Perspective);
+    setView(_current_view);
 
     //Skybox (not lit)
     glPushMatrix();
