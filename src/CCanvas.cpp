@@ -52,12 +52,13 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         if (_x_wing.is_battle_mode()) {
           const Point3d p = _x_wing.p();
           double angle = _x_wing.alpha() * 180 / PI;
-          double x = 1.8 ;
+          double rad = _x_wing.alpha();
+          double x = 1.8;
           double y = 0.45;
           double z = 0.0;
-          _projectiles.push_back(Projectile(p + Point3d( x,  y, z), angle));
-          _projectiles.push_back(Projectile(p + Point3d(-x,  y, z), angle));
-          _projectiles.push_back(Projectile(p + Point3d( x, -y, z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(x, y, z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(-x, y, z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(x, -y, z), angle));
           _projectiles.push_back(Projectile(p + Point3d(-x, -y, z), angle));
         }
         break;
@@ -70,6 +71,13 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         if (_x_wing.is_stable()) {
           _x_wing.speed(-0.0005);
         }
+        break;
+    case Qt::Key_C:
+        if (_current_view == View::Perspective) _current_view = View::Cockpit;
+        else _current_view = View::Perspective;
+        break;
+    case Qt::Key_T:
+        _tieView = !_tieView;
         break;
     }
 }
@@ -262,7 +270,7 @@ void CCanvas::paintGL()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Setup the current view
-    setView(View::Perspective);
+    setView(_current_view);
 
     //Skybox (not lit)
     glPushMatrix();
@@ -274,7 +282,7 @@ void CCanvas::paintGL()
     glFogi(GL_FOG_MODE, GL_LINEAR);
     glFogfv(GL_FOG_COLOR, fogColor);
     glFogf(GL_FOG_START, 2.0f);             // Fog Start Depth
-    glFogf(GL_FOG_END, 200.0f);             // Fog End Depth
+    glFogf(GL_FOG_END, 220.0f);             // Fog End Depth
 
     glEnable(GL_FOG);
 
@@ -308,9 +316,18 @@ void CCanvas::paintGL()
     _vader_tie.move(double(tau));
 
     // Cockpit camera
-    _cockpit.setYaw(-_x_wing.alpha() + PI);
-    _cockpit.setRoll(_x_wing.beta());
-    _cockpit.setPosition(_x_wing.p() + Point3d(0.0, 0.5, 0.0));
+    Model* selected_ship = nullptr;
+    if (_tieView) {
+        selected_ship = &_vader_tie;
+    } else {
+        selected_ship = &_x_wing;
+    }
+    _cockpit.setYaw(-selected_ship->alpha() + PI);
+    _cockpit.setRoll(selected_ship->beta());
+    _cockpit.setPosition(selected_ship->p() + Point3d(-5.5*sin(_cockpit.getYaw()), 1.5, 5.5*cos(_cockpit.getYaw())));
+
+    glDisable(GL_LIGHT0);
+    glDisable(GL_LIGHTING);
 
     // Projectiles
     for (Projectile & projectile : _projectiles) {
@@ -338,8 +355,5 @@ void CCanvas::paintGL()
     }
 
     tau += 0.02f;
-
-    glDisable(GL_LIGHT0);
-    glDisable(GL_LIGHTING);
     glDisable(GL_FOG);
 }

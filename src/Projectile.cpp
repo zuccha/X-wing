@@ -41,10 +41,9 @@ void Projectile::init()
 
 void Projectile::draw()
 {
-//    double color[4];
-//    glGetDoublev(GL_CURRENT_COLOR, color);
+//    glColor3d(1.0,  0.01, 0.57);
+//    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
 //    glEnable(GL_COLOR_MATERIAL);
-//    glColor3d(1.0, 0.0, 0.0);
 
     // Draw bottom
     glBegin(GL_TRIANGLE_FAN);
@@ -70,8 +69,6 @@ void Projectile::draw()
       glVertex3d(face[3].x(), face[3].y(), face[3].z());
       glEnd();
     }
-
-//    glColor4d(color[0], color[1], color[2], color[3]);
 //    glDisable(GL_COLOR_MATERIAL);
 }
 
