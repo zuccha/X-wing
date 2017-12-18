@@ -38,7 +38,13 @@ public:
         _vader_tie("./media/models/vader-tie/", "vader-tie.obj"),
         _skybox(),
         _current_view(View::Cockpit),
-        _tieView(false)
+        _tieView(false),
+        _platform("./media/models/platform/",
+                  "landplat_3.obj",
+                  {0,0,0},
+                  {0,0,0},
+                  {0,0,0}
+                  )
     {
         QTimer *timer = new QTimer(this);
         connect(timer, SIGNAL(timeout()), this, SLOT(updateGL()));
@@ -91,6 +97,8 @@ private:
     XWing _x_wing;
     Tie   _vader_tie;
     Skybox _skybox;
+    Model _platform;
+
     std::list<Projectile> _projectiles;
 
     GLfloat tau;

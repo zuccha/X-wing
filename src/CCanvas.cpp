@@ -90,8 +90,10 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         }
         break;
     case Qt::Key_C:
-        if (_current_view == View::Perspective) _current_view = View::Cockpit;
-        else _current_view = View::Perspective;
+        if (_current_view == View::Perspective)
+            _current_view = View::Cockpit;
+        else
+            _current_view = View::Perspective;
         break;
     case Qt::Key_T:
         _tieView = !_tieView;
@@ -125,6 +127,8 @@ void CCanvas::initializeGL()
     _camera.setPosition({-19.0, 50.0, 30.0});
     _camera.setPitch(-0.5);
     _camera.setYaw(0.45);
+
+    _platform.init();
 //    _camera.setPosition(Point3d(5.0, 20.0, 30.0));
 //    _camera.rotateY(-PI/4);
 }
@@ -324,6 +328,11 @@ void CCanvas::paintGL()
     // Terrain
     _terrain.draw();
 
+    glPushMatrix();
+    glTranslated(5.0, 0, 0);
+    glScaled(0.05, 0.05, 0.05);
+//    _platform.draw();
+    glPopMatrix();
     // X-wing
     _x_wing.move(double(tau));
 //    glPushMatrix();
