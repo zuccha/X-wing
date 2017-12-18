@@ -9,20 +9,36 @@ using namespace std;
 
 
 void CCanvas::keyPressEvent(QKeyEvent *event) {
-//    std::cout << "Pressed " << event->key() << std::endl;
-    double delta = 10.0;
+//    std::cout << "Position " << _camera.getPosition();
+//    std::cout << "Pitch " << _camera.getPitch() << std::endl;
+//    std::cout << "Yaw " << _camera.getYaw() << std::endl;
+    double yaw = _camera.getYaw();
+    double pitch = _camera.getPitch();
+    double delta = 2.0;
     switch(event->key()) {
+    case Qt::Key_1: // take-off camera
+        _camera.setPosition({11.0, 2.0, 10.0});
+        _camera.setPitch(-0.65);
+        _camera.setYaw(-0.5);
+        break;
+//        _current_view = View::Perspective;
+    case Qt::Key_2: // overview camera
+        _camera.setPosition({-19.0, 50.0, 30.0});
+        _camera.setPitch(-0.5);
+        _camera.setYaw(0.45);
+        break;
+//        _current_view = View::Perspective;
     case Qt::Key_W:
-        _camera.translate({0.0, 0.0, -delta});
+        _camera.translate({sin(yaw)*delta, sin(pitch)*delta, -cos(yaw)*delta});
         break;
     case Qt::Key_A:
-        _camera.translate({-delta, 0.0, 0.0});
+        _camera.translate({sin(yaw-PI/2)*delta, 0, -cos(yaw-PI/2)*delta});
         break;
     case Qt::Key_S:
-        _camera.translate({0.0, 0.0, delta});
+        _camera.translate({sin(yaw)*-delta, sin(pitch)*-delta, -cos(yaw)*-delta});
         break;
     case Qt::Key_D:
-        _camera.translate({delta, 0.0, 0.0});
+        _camera.translate({sin(yaw+PI/2)*delta, 0, -cos(yaw+PI/2)*delta});
         break;
     case Qt::Key_Q:
         _camera.rotateZ(0.05);
@@ -53,13 +69,14 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
           const Point3d p = _x_wing.p();
           double angle = _x_wing.alpha() * 180 / PI;
           double rad = _x_wing.alpha();
-          double x = 1.8;
+          double k = 1.8;
+          double x = k*cos(rad);
           double y = 0.45;
-          double z = 0.0;
+          double z = -k*sin(rad);
           _projectiles.push_back(Projectile(p + Point3d(x, y, z), angle));
-          _projectiles.push_back(Projectile(p + Point3d(-x, y, z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(-x, y, -z), angle));
           _projectiles.push_back(Projectile(p + Point3d(x, -y, z), angle));
-          _projectiles.push_back(Projectile(p + Point3d(-x, -y, z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(-x, -y, -z), angle));
         }
         break;
     case Qt::Key_N:
@@ -105,7 +122,9 @@ void CCanvas::initializeGL()
     _terrain.generate(300);
     _skybox.init();
 
-    _camera.setPosition(Point3d(1.0, 50.0, 30.0));
+    _camera.setPosition({-19.0, 50.0, 30.0});
+    _camera.setPitch(-0.5);
+    _camera.setYaw(0.45);
 //    _camera.setPosition(Point3d(5.0, 20.0, 30.0));
 //    _camera.rotateY(-PI/4);
 }
@@ -231,7 +250,7 @@ void CCanvas::setView(View _view) {
     Point3d pos;
     double pitch;
     double yaw;
-    double roll;
+    double roll = 0;
 
     Point3d up = {sin(roll), cos(roll), 0.0};
 
