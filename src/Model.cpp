@@ -14,7 +14,9 @@ Model::Model(const std::string & path, const std::string & name,
     , _a(0.0)
     , _t(0.0)
     , _alpha(0.0)
+    , _beta(0.0)
     , _gamma_prev(0.0)
+    , _first_move(true)
 {
   _load(path, name);
 }
@@ -181,7 +183,7 @@ void Model::move(double time)
 {
     _move_elipse(time);
 }
-
+#include "XWing.h"
 void Model::_move_elipse(double time)
 {
     Point3d p = _p;
@@ -189,19 +191,27 @@ void Model::_move_elipse(double time)
     _p = _o + _elipse_position(_t);
     _d = p - _p;
 
+    double alpha_old = _alpha;
+
+    // Avoid blue frame
+    if (!_first_move) {
+        _alpha = _rotation(-_d.z(), -_d.x());
+        _beta  = _incline(_alpha, alpha_old);
+    }
+
     glPushMatrix();
     glTranslated(_p.x(), _p.y(), _p.z());
-
-    double alpha_old = _alpha;
-    _alpha = _rotation(-_d.z(), -_d.x());
-    _beta  = _incline(_alpha, alpha_old);
-
     glRotated(_alpha, 0, 1, 0); // Movement direction
-    glRotated(_beta,  0, 0, 1); // Curvature
+    // Horrible fix for blue frame
+    if (_t > 0.1) {
+      glRotated(_beta,  0, 0, 1); // Curvature
+    }
 
     this->draw();
 
     glPopMatrix();
+
+     _first_move = false;
 }
 
 double Model::_rotation(double x, double y)
@@ -216,11 +226,13 @@ double Model::_incline(double alpha, double beta)
 {
     constexpr double LIMIT = 90.0;
     double a = alpha - beta;
+
     double gamma = _gamma_prev;
     if (abs(a) < 10.0) {
-      gamma = a * -10.8;
+      gamma = a * -198.8 * _s;
     }
     _gamma_prev = gamma;
+
     if (gamma < -LIMIT) {
         return -(LIMIT - 1.0);
     }

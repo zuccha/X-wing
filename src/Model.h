@@ -44,6 +44,7 @@ protected:
   double _alpha;
   double _beta;
   double _gamma_prev;
+  bool   _first_move;
 
 private:
   void _load(const std::string & path, const std::string & name);

@@ -130,6 +130,7 @@ void XWing::move(double time)
       this->draw();
       glPopMatrix();
     } else {
+      Model::move(time);
       if (!_s_stable) {
         if (_s_decrease) {
           _s -= 0.0001;
@@ -143,7 +144,6 @@ void XWing::move(double time)
           _s_decrease = true;
         }
       }
-      Model::move(time);
       _t += _s;
     }
 }
