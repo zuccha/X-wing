@@ -314,7 +314,7 @@ void CCanvas::paintGL()
     // Cockpit camera
     _cockpit.setYaw(-_x_wing.alpha() + PI);
     _cockpit.setRoll(_x_wing.beta());
-    _cockpit.setPosition(_x_wing.p() + Point3d(0.0, 0.5, 0.0));
+    _cockpit.setPosition(_x_wing.p() + Point3d(-5.5*sin(_cockpit.getYaw()), 1.5, 5.5*cos(_cockpit.getYaw())));
 
     // Projectiles
     for (Projectile & projectile : _projectiles) {
