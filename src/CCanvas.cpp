@@ -118,6 +118,11 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
     case Qt::Key_T:
         _tieView = !_tieView;
         break;
+    case Qt::Key_R:
+        tau = 0;
+        _x_wing.reset();
+        _vader_tie.reset();
+        break;
     }
 }
 

@@ -151,3 +151,14 @@ void XWing::move(double time)
         explode();
     }
 }
+
+void XWing::reset() {
+    Model::reset();
+    _is_take_off    = false;
+    _legs_offset    = 0.0f;
+    _front_leg      = 1.0f;
+    _is_battle_mode = false;
+    _wings_degree   = 0.0f;
+    take_off(true);
+    battle_mode(true);
+}

@@ -15,6 +15,7 @@ public:
   virtual void init();
   virtual void draw();
   virtual void move(double time);
+  virtual void reset();
 
   const Point3d & p() { return _p; }
   const Point3d & d() { return _d; }

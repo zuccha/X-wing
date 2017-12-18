@@ -267,6 +267,7 @@ void Model::speed(double n)
   }
 }
 
+
 void Model::explode()
 {
     for (unsigned int i = 0; i < _components.size(); ++i) {
@@ -279,4 +280,16 @@ void Model::explode()
       glPopMatrix();
     }
     _e += 0.02;
+}
+
+void Model::reset() {
+    _s = 0.0;
+    _a = 0.0;
+    _t = 0.0;
+    _e = 0.0;
+    _alpha = 0.0;
+    _beta = 0.0;
+    _gamma_prev = 0.0;
+    _first_move = true;
+    _is_exploding = false;
 }

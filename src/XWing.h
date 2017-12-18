@@ -11,6 +11,7 @@ public:
     void init() override;
     void draw() override;
     void move(double time) override;
+    void reset() override;
 
     bool is_battle_mode() { return _is_battle_mode; }
     bool is_stable() { return _s_stable; }
