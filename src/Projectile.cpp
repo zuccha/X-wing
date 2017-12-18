@@ -77,8 +77,8 @@ void Projectile::move(double time)
     _p = _p + _d * _t;
     glTranslated(_p.x(), _p.y(), _p.z());
     glRotated(_angle, 0, 1, 0);
-    glScaled(0.1, 0.1, 0.1);
+    glScaled(0.05, 0.05, 0.05);
     this->draw();
     glPopMatrix();
-    _t += 5;
+    _t += 5.0;
 }

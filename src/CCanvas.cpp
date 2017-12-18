@@ -52,7 +52,13 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         if (_x_wing.is_battle_mode()) {
           const Point3d p = _x_wing.p();
           double angle = _x_wing.alpha() * 180 / PI;
-          _projectiles.push_back(Projectile(p, angle));
+          double x = 1.8;
+          double y = 0.45;
+          double z = 0.0;
+          _projectiles.push_back(Projectile(p + Point3d(x, y, z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(-x, y, z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(x, -y, z), angle));
+          _projectiles.push_back(Projectile(p + Point3d(-x, -y, z), angle));
         }
         break;
     case Qt::Key_N:
@@ -92,7 +98,8 @@ void CCanvas::initializeGL()
     _skybox.init();
 
     _camera.setPosition(Point3d(1.0, 50.0, 30.0));
-    _camera.rotateY(-PI/4);
+//    _camera.setPosition(Point3d(5.0, 20.0, 30.0));
+//    _camera.rotateY(-PI/4);
 }
 
 //-----------------------------------------------------------------------------
@@ -288,12 +295,14 @@ void CCanvas::paintGL()
     glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
 
     // Terrain
-    glPushMatrix();
     _terrain.draw();
-    glPopMatrix();
 
     // X-wing
     _x_wing.move(double(tau));
+//    glPushMatrix();
+//    glTranslated(_x_wing.p().x(), _x_wing.p().y(), _x_wing.p().z());
+//    _x_wing.draw();
+//    glPopMatrix();
 
     // Vader tie fighter
     _vader_tie.move(double(tau));
@@ -319,7 +328,7 @@ void CCanvas::paintGL()
     }
 
     // Check if x-wing collides with tie
-    if ((_x_wing.p() - _vader_tie.p()).norm() < 10.0) {
+    if ((_x_wing.p() - _vader_tie.p()).norm() < 5.0) {
         _vader_tie.explode(true);
     }
 
