@@ -44,12 +44,9 @@ void Projectile::init()
 
 void Projectile::draw()
 {
-//    glColor3d(1.0,  0.01, 0.57);
-//    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-//    glEnable(GL_COLOR_MATERIAL);
-
     // Draw bottom
     glBegin(GL_TRIANGLE_FAN);
+    glColor3d(1.0,  0.0, 0.0);
     for (unsigned int i = 0; i < _bottom.size(); ++i) {
       glVertex3d(_bottom[i].x(), _bottom[i].y(), _bottom[i].z());
     }
@@ -57,6 +54,7 @@ void Projectile::draw()
 
     // Draw top
     glBegin(GL_TRIANGLE_FAN);
+    glColor3d(1.0,  0.0, 0.0);
     for (unsigned int i = 1; i < _top.size(); ++i) {
       glVertex3d(_top[i].x(), _top[i].y(), _top[i].z());
     }
@@ -65,6 +63,7 @@ void Projectile::draw()
     // Draw faces
     for (unsigned int i = 0; i < _faces.size(); ++i) {
       glBegin(GL_TRIANGLE_STRIP);
+      glColor3d(1.0,  0.0, 0.0);
       PointArray & face = _faces[i];
       glVertex3d(face[0].x(), face[0].y(), face[0].z());
       glVertex3d(face[1].x(), face[1].y(), face[1].z());
@@ -72,7 +71,9 @@ void Projectile::draw()
       glVertex3d(face[3].x(), face[3].y(), face[3].z());
       glEnd();
     }
-//    glDisable(GL_COLOR_MATERIAL);
+
+    glColor3d(1.0, 1.0, 1.0);
+    glDisable(GL_COLOR_MATERIAL);
 }
 
 void Projectile::move(double time, double angle)
@@ -83,7 +84,7 @@ void Projectile::move(double time, double angle)
     glRotated(_alpha, 0, 1, 0);
     glRotated(_beta, 0, 0, 1);
     glTranslated(_o.x(), _o.y(), _o.z() + 5.5 * cos(angle));
-    glScaled(0.05, 0.05, 0.05);
+    glScaled(0.03, 0.03, 0.1);
     this->draw();
     glPopMatrix();
     _t += 5.0;
