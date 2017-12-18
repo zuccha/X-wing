@@ -28,17 +28,10 @@ void Tie::draw()
 
 void Tie::move(double time)
 {
-//    std::cout << time << std::endl;
   if (!_is_exploding) {
     Model::move(time);
   } else {
     explode();
   }
   _t += _s;
-}
-
-void Tie::reset() {
-    Model::reset();
-    _t = -3 * PI / 4;
-    _s = 0.035;
 }

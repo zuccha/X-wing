@@ -13,7 +13,6 @@ public:
     void init() override;
     void draw() override;
     void move(double time) override;
-    void reset() override;
 };
 
 #endif // TIE_H

@@ -133,16 +133,10 @@ void XWing::move(double time)
         } else {
           Model::move(time);
           if (!_s_stable) {
-            if (_s_decrease) {
-              _s -= 0.0001;
-              if (_s < 0.035) {
-                _s_stable = true;
-                _s = 0.035;
-              }
-            } else if (_s < 0.06) {
-              _s += 0.00015;
-            } else {
-              _s_decrease = true;
+            _s += 0.0002;
+            if (_s >= 0.035) {
+              _s = 0.035;
+              _s_stable = true;
             }
           }
           _t += _s;
@@ -150,15 +144,4 @@ void XWing::move(double time)
     } else {
         explode();
     }
-}
-
-void XWing::reset() {
-    Model::reset();
-    _is_take_off    = false;
-    _legs_offset    = 0.0f;
-    _front_leg      = 1.0f;
-    _is_battle_mode = false;
-    _wings_degree   = 0.0f;
-    take_off(true);
-    battle_mode(true);
 }

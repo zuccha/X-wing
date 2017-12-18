@@ -65,7 +65,7 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         _camera.rotateY(-0.05);
         break;
     case Qt::Key_P:
-        if (_current_view != Perspective) {
+        if (_current_view == View::Cockpit) {
           if (_tieView) {
             const Point3d p = _vader_tie.p();
             double alpha = _vader_tie.alpha() * 180 / PI;
@@ -90,7 +90,7 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         }
         break;
     case Qt::Key_N:
-        if (_current_view != Perspective) {
+        if (_current_view == View::Cockpit) {
           if (_tieView) {
             _vader_tie.speed(0.0005);
           } else {
@@ -101,13 +101,22 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         }
         break;
     case Qt::Key_M:
-        if (_current_view != Perspective) {
+        if (_current_view == View::Cockpit) {
           if (_tieView) {
             _vader_tie.speed(-0.0005);
           } else {
             if (_x_wing.is_stable()) {
               _x_wing.speed(-0.0005);
             }
+          }
+        }
+        break;
+    case Qt::Key_U:
+        if (_current_view == View::Cockpit) {
+          if (_tieView) {
+            _vader_tie.is_exploding(true);
+          } else {
+            _x_wing.is_exploding(true);
           }
         }
         break;
@@ -119,9 +128,12 @@ void CCanvas::keyPressEvent(QKeyEvent *event) {
         _tieView = !_tieView;
         break;
     case Qt::Key_R:
+        _projectiles.clear();
+        _x_wing = XWing("./media/models/x-wing/", "x-wing.obj");
+        _vader_tie = Tie("./media/models/vader-tie/", "vader-tie.obj");
+        _x_wing.init();
+        _vader_tie.init();
         tau = 0;
-        _x_wing.reset();
-        _vader_tie.reset();
         break;
     }
 }
