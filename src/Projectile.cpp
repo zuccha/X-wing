@@ -5,6 +5,7 @@ Projectile::Projectile(const Point3d & p, double angle)
     : _p(p)
     , _angle(angle)
 {
+    _d = Point3d(sin(_angle  * PI / 180.0), 0, cos(_angle  * PI / 180.0));
     init();
 }
 
@@ -73,9 +74,9 @@ void Projectile::draw()
 void Projectile::move(double time)
 {
     glPushMatrix();
+    _p = _p + _d * _t;
     glTranslated(_p.x(), _p.y(), _p.z());
     glRotated(_angle, 0, 1, 0);
-    glTranslated(0.0, 0.0, _t);
     glScaled(0.1, 0.1, 0.1);
     this->draw();
     glPopMatrix();

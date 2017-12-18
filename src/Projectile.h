@@ -23,7 +23,8 @@ private:
     double _length = 10;
     double _radius = 1;
     Point3d _p; // Position
-    double _angle; // Direction
+    Point3d _d; // Direction
+    double _angle;
 
     PointArray _bottom;
     PointArray _top;
