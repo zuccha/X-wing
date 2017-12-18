@@ -9,9 +9,24 @@ using namespace std;
 
 
 void CCanvas::keyPressEvent(QKeyEvent *event) {
-//    std::cout << "Pressed " << event->key() << std::endl;
+//    std::cout << "Position " << _camera.getPosition();
+//    std::cout << "Pitch " << _camera.getPitch() << std::endl;
+//    std::cout << "Yaw " << _camera.getYaw() << std::endl;
+
     double delta = 10.0;
     switch(event->key()) {
+    case Qt::Key_1: // take-off camera
+        _camera.setPosition({11.0, 2.0, 10.0});
+        _camera.setPitch(-0.65);
+        _camera.setYaw(-0.5);
+        break;
+//        _current_view = View::Perspective;
+    case Qt::Key_2: // overview camera
+        _camera.setPosition({-19.0, 50.0, 30.0});
+        _camera.setPitch(-0.5);
+        _camera.setYaw(0.45);
+        break;
+//        _current_view = View::Perspective;
     case Qt::Key_W:
         _camera.translate({0.0, 0.0, -delta});
         break;
@@ -106,7 +121,9 @@ void CCanvas::initializeGL()
     _terrain.generate(300);
     _skybox.init();
 
-    _camera.setPosition(Point3d(1.0, 50.0, 30.0));
+    _camera.setPosition({-19.0, 50.0, 30.0});
+    _camera.setPitch(-0.5);
+    _camera.setYaw(0.45);
 //    _camera.setPosition(Point3d(5.0, 20.0, 30.0));
 //    _camera.rotateY(-PI/4);
 }
