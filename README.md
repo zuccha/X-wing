@@ -53,4 +53,6 @@ The two models used in this project were found on Free3D website, provided by us
 - https://free3d.com/3d-model/star-wars-x-wing-23129.html
 - https://free3d.com/3d-model/star-wars-vader-tie-63619.html
 
-The terrain is generated with a noise function provided by the library PerlinNoise by Ryo Suzuki.
+The terrain is generated with a noise function provided by the library PerlinNoise by Ryo Suzuki, available at
+
+- https://github.com/Reputeless/PerlinNoise
