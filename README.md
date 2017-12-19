@@ -36,7 +36,7 @@ The user can interact with the scene with the following commands
 - `A`/`D`: Move camera left/right. Only available in `Perspective` view.
 - `W`/`S`: Move camera frontward/backward. Only available in `Perspective` view.
 - `Q`/`E`: Move camera upward/downward. Only available in `Perspective` view.
-- `&#2190;`/`&#2192;`/`&#2191;`/`&#2193;`: Turn camera. Only available in `Perspective` view.
+- `Left;`/`Right`/`Up`/`Down`: Turn camera. Only available in `Perspective` view.
 - `Space`: Shoot lasers from the selected starfighter. The lasers can be used to destroy the other starfighter. Only available in `Cockpit` view.
 - `N`/`M`: Accelerate/decelerate selected starfighter. If the two starfighters collide, they will explode. Only available in `Cockpit` view.
 - `U`: Destroy selected starfighter. Only available in `Cockpit` view.
