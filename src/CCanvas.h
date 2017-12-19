@@ -33,7 +33,6 @@ class CCanvas : public QGLWidget
 
 public:
     explicit CCanvas(QWidget *parent = 0) : QGLWidget(parent),
-//        _x_wing   ("./media/models/", "train.obj")
         _x_wing   ("./media/models/x-wing/", "x-wing.obj"),
         _vader_tie("./media/models/vader-tie/", "vader-tie.obj"),
         _skybox(),
